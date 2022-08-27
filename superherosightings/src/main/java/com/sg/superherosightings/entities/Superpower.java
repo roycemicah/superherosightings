@@ -12,16 +12,16 @@ import java.util.Objects;
  */
 public class Superpower {
     
-    int SuperpowerID;
+    int superpowerID;
     String name;
     String description;
 
     public int getSuperpowerID() {
-        return SuperpowerID;
+        return superpowerID;
     }
 
     public void setSuperpowerID(int SuperpowerID) {
-        this.SuperpowerID = SuperpowerID;
+        this.superpowerID = SuperpowerID;
     }
 
     public String getName() {
@@ -43,7 +43,7 @@ public class Superpower {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 17 * hash + this.SuperpowerID;
+        hash = 17 * hash + this.superpowerID;
         hash = 17 * hash + Objects.hashCode(this.name);
         hash = 17 * hash + Objects.hashCode(this.description);
         return hash;
@@ -61,7 +61,7 @@ public class Superpower {
             return false;
         }
         final Superpower other = (Superpower) obj;
-        if (this.SuperpowerID != other.SuperpowerID) {
+        if (this.superpowerID != other.superpowerID) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {

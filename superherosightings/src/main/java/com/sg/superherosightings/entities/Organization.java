@@ -4,6 +4,8 @@
  */
 package com.sg.superherosightings.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -12,24 +14,20 @@ import java.util.Objects;
  */
 public class Organization {
     
-    int OrganizationID;
+    int organizationID;
     String name;
     String description;
-    String streetNumber;
-    String streetName;
-    String city;
-    String stateProvince;
-    String zipPostalCode;
-    String country;
+    Address address;
     String phone;
     String email;
+    List<HeroVillain> members = new ArrayList<>(); 
 
     public int getOrganizationID() {
-        return OrganizationID;
+        return organizationID;
     }
 
     public void setOrganizationID(int OrganizationID) {
-        this.OrganizationID = OrganizationID;
+        this.organizationID = OrganizationID;
     }
 
     public String getName() {
@@ -48,52 +46,12 @@ public class Organization {
         this.description = description;
     }
 
-    public String getStreetNumber() {
-        return streetNumber;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
-    public String getStreetName() {
-        return streetName;
-    }
-
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getStateProvince() {
-        return stateProvince;
-    }
-
-    public void setStateProvince(String stateProvince) {
-        this.stateProvince = stateProvince;
-    }
-
-    public String getZipPostalCode() {
-        return zipPostalCode;
-    }
-
-    public void setZipPostalCode(String zipPostalCode) {
-        this.zipPostalCode = zipPostalCode;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public String getPhone() {
@@ -112,20 +70,24 @@ public class Organization {
         this.email = email;
     }
 
+    public List<HeroVillain> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<HeroVillain> members) {
+        this.members = members;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + this.OrganizationID;
-        hash = 29 * hash + Objects.hashCode(this.name);
-        hash = 29 * hash + Objects.hashCode(this.description);
-        hash = 29 * hash + Objects.hashCode(this.streetNumber);
-        hash = 29 * hash + Objects.hashCode(this.streetName);
-        hash = 29 * hash + Objects.hashCode(this.city);
-        hash = 29 * hash + Objects.hashCode(this.stateProvince);
-        hash = 29 * hash + Objects.hashCode(this.zipPostalCode);
-        hash = 29 * hash + Objects.hashCode(this.country);
-        hash = 29 * hash + Objects.hashCode(this.phone);
-        hash = 29 * hash + Objects.hashCode(this.email);
+        int hash = 5;
+        hash = 97 * hash + this.organizationID;
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + Objects.hashCode(this.description);
+        hash = 97 * hash + Objects.hashCode(this.address);
+        hash = 97 * hash + Objects.hashCode(this.phone);
+        hash = 97 * hash + Objects.hashCode(this.email);
+        hash = 97 * hash + Objects.hashCode(this.members);
         return hash;
     }
 
@@ -141,7 +103,7 @@ public class Organization {
             return false;
         }
         final Organization other = (Organization) obj;
-        if (this.OrganizationID != other.OrganizationID) {
+        if (this.organizationID != other.organizationID) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {
@@ -150,28 +112,16 @@ public class Organization {
         if (!Objects.equals(this.description, other.description)) {
             return false;
         }
-        if (!Objects.equals(this.streetNumber, other.streetNumber)) {
-            return false;
-        }
-        if (!Objects.equals(this.streetName, other.streetName)) {
-            return false;
-        }
-        if (!Objects.equals(this.city, other.city)) {
-            return false;
-        }
-        if (!Objects.equals(this.stateProvince, other.stateProvince)) {
-            return false;
-        }
-        if (!Objects.equals(this.zipPostalCode, other.zipPostalCode)) {
-            return false;
-        }
-        if (!Objects.equals(this.country, other.country)) {
-            return false;
-        }
         if (!Objects.equals(this.phone, other.phone)) {
             return false;
         }
-        return Objects.equals(this.email, other.email);
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        if (!Objects.equals(this.address, other.address)) {
+            return false;
+        }
+        return Objects.equals(this.members, other.members);
     }
 
 }

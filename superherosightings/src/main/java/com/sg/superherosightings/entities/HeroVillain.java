@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 public class HeroVillain {
     
-    int HeroVillainID;
+    int heroVillainID;
     String name;
     boolean IsHero;
     String description;
@@ -23,11 +23,11 @@ public class HeroVillain {
     List<Organization> organizations = new ArrayList<>();
 
     public int getHeroVillainID() {
-        return HeroVillainID;
+        return heroVillainID;
     }
 
     public void setHeroVillainID(int HeroVillainID) {
-        this.HeroVillainID = HeroVillainID;
+        this.heroVillainID = HeroVillainID;
     }
 
     public String getName() {
@@ -81,7 +81,7 @@ public class HeroVillain {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + this.HeroVillainID;
+        hash = 97 * hash + this.heroVillainID;
         hash = 97 * hash + Objects.hashCode(this.name);
         hash = 97 * hash + (this.IsHero ? 1 : 0);
         hash = 97 * hash + Objects.hashCode(this.description);
@@ -103,7 +103,7 @@ public class HeroVillain {
             return false;
         }
         final HeroVillain other = (HeroVillain) obj;
-        if (this.HeroVillainID != other.HeroVillainID) {
+        if (this.heroVillainID != other.heroVillainID) {
             return false;
         }
         if (this.IsHero != other.IsHero) {

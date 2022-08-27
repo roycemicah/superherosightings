@@ -15,17 +15,17 @@ import java.util.Objects;
  */
 public class Sighting {
     
-    int SightingID;
+    int sightingID;
     Location location;
     List<HeroVillain> isHeroVillainInSight = new ArrayList<>();
     LocalDate date;
 
     public int getSightingID() {
-        return SightingID;
+        return sightingID;
     }
 
     public void setSightingID(int SightingID) {
-        this.SightingID = SightingID;
+        this.sightingID = SightingID;
     }
 
     public Location getLocation() {
@@ -55,7 +55,7 @@ public class Sighting {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + this.SightingID;
+        hash = 29 * hash + this.sightingID;
         hash = 29 * hash + Objects.hashCode(this.location);
         hash = 29 * hash + Objects.hashCode(this.isHeroVillainInSight);
         hash = 29 * hash + Objects.hashCode(this.date);
@@ -74,7 +74,7 @@ public class Sighting {
             return false;
         }
         final Sighting other = (Sighting) obj;
-        if (this.SightingID != other.SightingID) {
+        if (this.sightingID != other.sightingID) {
             return false;
         }
         if (!Objects.equals(this.location, other.location)) {

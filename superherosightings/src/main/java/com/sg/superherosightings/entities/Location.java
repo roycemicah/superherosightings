@@ -14,25 +14,20 @@ import java.util.Objects;
  */
 public class Location {
     
-    int LocationID;
+    int locationID;
     String name;
     String description;
     Double latitude;
     Double longitude;
-    String streetNumber;
-    String streetName;
-    String city;
-    String stateProvince;
-    String zipPostalCode;
-    String country;
+    Address address;
     List<HeroVillain> heroVillainsSighted = new ArrayList<>();
 
     public int getLocationID() {
-        return LocationID;
+        return locationID;
     }
 
     public void setLocationID(int LocationID) {
-        this.LocationID = LocationID;
+        this.locationID = LocationID;
     }
 
     public String getName() {
@@ -67,52 +62,12 @@ public class Location {
         this.longitude = longitude;
     }
 
-    public String getStreetNumber() {
-        return streetNumber;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
-    public String getStreetName() {
-        return streetName;
-    }
-
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getStateProvince() {
-        return stateProvince;
-    }
-
-    public void setStateProvince(String stateProvince) {
-        this.stateProvince = stateProvince;
-    }
-
-    public String getZipPostalCode() {
-        return zipPostalCode;
-    }
-
-    public void setZipPostalCode(String zipPostalCode) {
-        this.zipPostalCode = zipPostalCode;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public List<HeroVillain> getHeroVillainsSighted() {
@@ -125,19 +80,14 @@ public class Location {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + this.LocationID;
-        hash = 97 * hash + Objects.hashCode(this.name);
-        hash = 97 * hash + Objects.hashCode(this.description);
-        hash = 97 * hash + Objects.hashCode(this.latitude);
-        hash = 97 * hash + Objects.hashCode(this.longitude);
-        hash = 97 * hash + Objects.hashCode(this.streetNumber);
-        hash = 97 * hash + Objects.hashCode(this.streetName);
-        hash = 97 * hash + Objects.hashCode(this.city);
-        hash = 97 * hash + Objects.hashCode(this.stateProvince);
-        hash = 97 * hash + Objects.hashCode(this.zipPostalCode);
-        hash = 97 * hash + Objects.hashCode(this.country);
-        hash = 97 * hash + Objects.hashCode(this.heroVillainsSighted);
+        int hash = 3;
+        hash = 43 * hash + this.locationID;
+        hash = 43 * hash + Objects.hashCode(this.name);
+        hash = 43 * hash + Objects.hashCode(this.description);
+        hash = 43 * hash + Objects.hashCode(this.latitude);
+        hash = 43 * hash + Objects.hashCode(this.longitude);
+        hash = 43 * hash + Objects.hashCode(this.address);
+        hash = 43 * hash + Objects.hashCode(this.heroVillainsSighted);
         return hash;
     }
 
@@ -153,7 +103,7 @@ public class Location {
             return false;
         }
         final Location other = (Location) obj;
-        if (this.LocationID != other.LocationID) {
+        if (this.locationID != other.locationID) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {
@@ -162,28 +112,13 @@ public class Location {
         if (!Objects.equals(this.description, other.description)) {
             return false;
         }
-        if (!Objects.equals(this.streetNumber, other.streetNumber)) {
-            return false;
-        }
-        if (!Objects.equals(this.streetName, other.streetName)) {
-            return false;
-        }
-        if (!Objects.equals(this.city, other.city)) {
-            return false;
-        }
-        if (!Objects.equals(this.stateProvince, other.stateProvince)) {
-            return false;
-        }
-        if (!Objects.equals(this.zipPostalCode, other.zipPostalCode)) {
-            return false;
-        }
-        if (!Objects.equals(this.country, other.country)) {
-            return false;
-        }
         if (!Objects.equals(this.latitude, other.latitude)) {
             return false;
         }
         if (!Objects.equals(this.longitude, other.longitude)) {
+            return false;
+        }
+        if (!Objects.equals(this.address, other.address)) {
             return false;
         }
         return Objects.equals(this.heroVillainsSighted, other.heroVillainsSighted);
