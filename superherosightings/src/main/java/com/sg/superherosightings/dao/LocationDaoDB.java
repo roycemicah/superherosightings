@@ -21,26 +21,26 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class LocationDaoDB implements LocationDao {
-    
+
     @Autowired
     JdbcTemplate jdbc;
-
 
     @Override
     public Location getLocationByID(int locationID) {
         try {
-            final String SELECT_LOCATION_BY_ID = "SELECT * FROM SuperheroSightings.Location " 
+            final String SELECT_LOCATION_BY_ID = "SELECT * FROM SuperheroSightings.Location "
                     + "WHERE LocationID = ?";
             Location location = jdbc.queryForObject(SELECT_LOCATION_BY_ID, new LocationMapper(), locationID);
-            
+
             return location;
         } catch (DataAccessException ex) {
             return null;
         }
     }
-    
+
     public List<HeroVillain> getHeroesSighted(int locationID) {
-        
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
 
     @Override
@@ -62,7 +62,7 @@ public class LocationDaoDB implements LocationDao {
     public void deleteLocationByID(int LocationID) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
     private static final class LocationMapper implements RowMapper<Location> {
 
         @Override
@@ -73,10 +73,10 @@ public class LocationDaoDB implements LocationDao {
             location.setDescription(rs.getString("Description"));
             location.setLatitude(rs.getDouble("Latitude"));
             location.setLongitude(rs.getDouble("Longitude"));
-            
+
             return location;
         }
-        
+
     }
-    
+
 }

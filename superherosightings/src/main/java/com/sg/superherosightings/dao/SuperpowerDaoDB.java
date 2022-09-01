@@ -67,7 +67,7 @@ public class SuperpowerDaoDB implements SuperpowerDao {
         jdbc.update(DELETE_SUPERPOWER, superpowerID);
     }
 
-    private static final class SuperpowerMapper implements RowMapper<Superpower> {
+    public static final class SuperpowerMapper implements RowMapper<Superpower> {
 
         @Override
         public Superpower mapRow(ResultSet rs, int rowNum) throws SQLException {

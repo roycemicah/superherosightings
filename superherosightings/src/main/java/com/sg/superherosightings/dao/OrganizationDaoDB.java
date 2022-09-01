@@ -21,20 +21,20 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class OrganizationDaoDB implements OrganizationDao {
-    
+
     @Autowired
     JdbcTemplate jdbc;
 
     @Override
-    public Organization getOrganizationByID(int organizationID) {      
-        try {  
+    public Organization getOrganizationByID(int organizationID) {
+        try {
             final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM SuperheroSightings.`Organization` "
                     + "WHERE OrganizationID = ?";
             Organization organization = jdbc.queryForObject(SELECT_ORGANIZATION_BY_ID, new OrganizationMapper(), organizationID);
             organization.setMembers(getAllOrganizationMembers(organizationID));
             return organization;
-            
-        } catch(DataAccessException ex) {
+
+        } catch (DataAccessException ex) {
             return null;
         }
     }
@@ -42,7 +42,7 @@ public class OrganizationDaoDB implements OrganizationDao {
     @Override
     public List<Organization> getAllOrganizations() {
         final String SELECT_ALL_ORGANIZATIONS = "SELECT * FROM SuperheroSightings.`Organization`";
-        
+        return jdbc.query(SELECT_ALL_ORGANIZATIONS, new OrganizationMapper());
     }
 
     @Override
@@ -62,23 +62,25 @@ public class OrganizationDaoDB implements OrganizationDao {
 
     @Override
     public List<HeroVillain> getAllOrganizationMembers(int organizationID) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
-    
-    private static final class OrganizationMapper implements RowMapper<Organization> {
-       
+
+    public static final class OrganizationMapper implements RowMapper<Organization> {
+
         @Override
         public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
-            
+
             Organization organization = new Organization();
             organization.setOrganizationID(rs.getInt("OrganizationID"));
             organization.setName(rs.getString("Name"));
             organization.setDescription(rs.getString("Description"));
             organization.setPhone(rs.getString("Phone"));
             organization.setEmail(rs.getString("Email"));
-            
+
             return organization;
         }
-        
+
     }
 
 }

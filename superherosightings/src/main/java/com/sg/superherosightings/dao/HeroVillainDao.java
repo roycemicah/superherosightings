@@ -16,7 +16,7 @@ import java.util.List;
 public interface HeroVillainDao {
     
     public HeroVillain getHeroVillainByID(int heroVillainID);
-    public List<HeroVillain> getAllHeroesVillains();
+    public List<HeroVillain> getAllHeroVillains();
     public HeroVillain addHeroVillain(HeroVillain heroVillain);
     public void updateHeroVillain(HeroVillain heroVillain);
     public void deleteHeroVillainByID(int heroVillainID);
