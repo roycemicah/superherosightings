@@ -13,7 +13,7 @@ CREATE TABLE HeroVillain (
     `Name` VARCHAR(30) NOT NULL,
     IsHero BOOL NOT NULL,
     `Description` VARCHAR(50),
-    SuperpowerID INT NOT NULL,
+    SuperpowerID INT,
     CONSTRAINT fk_HeroVillain_Superpower FOREIGN KEY (SuperpowerID)
         REFERENCES Superpower (SuperpowerID)
 );
@@ -70,7 +70,3 @@ CREATE TABLE Sighting (
     CONSTRAINT fk_Sighting_HeroVillain FOREIGN KEY (HeroVillainID)
         REFERENCES HeroVillain (HeroVillainID)
 );
-
-
-
-

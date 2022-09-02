@@ -14,6 +14,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -46,8 +47,12 @@ public class OrganizationDaoDB implements OrganizationDao {
     }
 
     @Override
+    @Transactional
     public Organization addOrganization(Organization organization) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        final String ADD_ORGANIZATION = "INSERT INTO `Organization`(`Name`, `Description`, Phone, Email, AddressID) VALUES(?,?,?,?,?)";
+        jdbc.update(ADD_ORGANIZATION, organization.getOrganizationID());
+        organization.setOrganizationID(jdbc.queryForObject("SELECT LAST_INSERT_ID", Integer.class));
+        return organization;
     }
 
     @Override

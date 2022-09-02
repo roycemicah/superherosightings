@@ -5,8 +5,6 @@
 package com.sg.superherosightings.entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,7 +15,7 @@ public class Sighting {
     
     int sightingID;
     Location location;
-    List<HeroVillain> isHeroVillainInSight = new ArrayList<>();
+    HeroVillain heroVillain;
     LocalDate date;
 
     public int getSightingID() {
@@ -36,12 +34,12 @@ public class Sighting {
         this.location = location;
     }
 
-    public List<HeroVillain> getIsHeroVillainInSight() {
-        return isHeroVillainInSight;
+    public HeroVillain getHeroVillain() {
+        return heroVillain;
     }
 
-    public void setIsHeroVillainInSight(List<HeroVillain> isHeroVillainInSight) {
-        this.isHeroVillainInSight = isHeroVillainInSight;
+    public void setHeroVillain(HeroVillain heroVillain) {
+        this.heroVillain = heroVillain;
     }
 
     public LocalDate getDate() {
@@ -54,11 +52,11 @@ public class Sighting {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + this.sightingID;
-        hash = 29 * hash + Objects.hashCode(this.location);
-        hash = 29 * hash + Objects.hashCode(this.isHeroVillainInSight);
-        hash = 29 * hash + Objects.hashCode(this.date);
+        int hash = 3;
+        hash = 79 * hash + this.sightingID;
+        hash = 79 * hash + Objects.hashCode(this.location);
+        hash = 79 * hash + Objects.hashCode(this.heroVillain);
+        hash = 79 * hash + Objects.hashCode(this.date);
         return hash;
     }
 
@@ -80,7 +78,7 @@ public class Sighting {
         if (!Objects.equals(this.location, other.location)) {
             return false;
         }
-        if (!Objects.equals(this.isHeroVillainInSight, other.isHeroVillainInSight)) {
+        if (!Objects.equals(this.heroVillain, other.heroVillain)) {
             return false;
         }
         return Objects.equals(this.date, other.date);

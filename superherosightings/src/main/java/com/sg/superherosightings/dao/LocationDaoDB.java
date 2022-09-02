@@ -63,7 +63,7 @@ public class LocationDaoDB implements LocationDao {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private static final class LocationMapper implements RowMapper<Location> {
+    public static final class LocationMapper implements RowMapper<Location> {
 
         @Override
         public Location mapRow(ResultSet rs, int rowNum) throws SQLException {
