@@ -4,6 +4,7 @@
  */
 package com.sg.superherosightings.dao;
 
+import com.sg.superherosightings.dao.HeroVillainDaoDB.HeroVillainMapper;
 import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Organization;
 import java.sql.ResultSet;
@@ -32,18 +33,24 @@ public class OrganizationDaoDB implements OrganizationDao {
             final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM SuperheroSightings.`Organization` "
                     + "WHERE OrganizationID = ?";
             Organization organization = jdbc.queryForObject(SELECT_ORGANIZATION_BY_ID, new OrganizationMapper(), organizationID);
-            organization.setMembers(getAllOrganizationMembers(organizationID));
+            setAllOrganizationMembers(organization);
             return organization;
 
         } catch (DataAccessException ex) {
             return null;
         }
     }
-
+    
     @Override
     public List<Organization> getAllOrganizations() {
-        final String SELECT_ALL_ORGANIZATIONS = "SELECT * FROM SuperheroSightings.`Organization`";
-        return jdbc.query(SELECT_ALL_ORGANIZATIONS, new OrganizationMapper());
+        final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM SuperheroSightings.`Organization`";
+            List<Organization> organizations = jdbc.query(SELECT_ORGANIZATION_BY_ID, new OrganizationMapper());
+            
+            for(Organization organization : organizations) {
+                setAllOrganizationMembers(organization);
+            }
+            
+            return organizations;
     }
 
     @Override
@@ -57,18 +64,29 @@ public class OrganizationDaoDB implements OrganizationDao {
 
     @Override
     public void updateOrganization(Organization organization) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        final String DELETE_CHARACTER_ORGANIZATION = "DELETE FROM CharacterOrganization WHERE OrganizationID = ?";
+        jdbc.update(DELETE_CHARACTER_ORGANIZATION, organization.getOrganizationID());
+        final String UPDATE_ORGANIZATION = "UPDATE `Organization` SET `Name` = ?, `Description` = ?, Phone = ?, Email = ?, AddressID = ? WHERE OrganizationID = ?";
+        jdbc.update(UPDATE_ORGANIZATION, organization.getName(), organization.getDescription(), organization.getPhone(), organization.getEmail(), organization.getAddress());
+
+        String ADD_CHARACTER_ORGANIZATION = "INSERT INTO CharacterOrganization(HeroVillainID, OrganizationID) VALUES(?,?)";
+
+        for (HeroVillain heroVillain : organization.getMembers()) {
+            jdbc.update(ADD_CHARACTER_ORGANIZATION, heroVillain.getHeroVillainID(), organization.getOrganizationID());
+        }
     }
 
     @Override
     public void deleteOrganizationByID(int OrganizationID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        final String DELETE_CHARACTER_ORGANIZATION = "DELETE FROM CharacterOrganization WHERE OrganizationID = ?";
+        jdbc.update(DELETE_CHARACTER_ORGANIZATION, OrganizationID);
+        final String DELETE_ORGANIZATION = "DELETE FROM `Organization` WHERE OrganizationID = ?";
+        jdbc.update(DELETE_ORGANIZATION, OrganizationID);
     }
 
-    @Override
-    public List<HeroVillain> getAllOrganizationMembers(int organizationID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-
+    private void setAllOrganizationMembers(Organization organization) {
+        final String SELECT_ALL_MEMBERS = "SELECT hv.* FROM HeroVillain hv JOIN CharacterOrganization co ON hv.HeroVillainID = co.HeroVillainID JOIN Organization o ON co.OrganizationID = o.OrganizationID WHERE o.OrganizationID = ?";
+        List<HeroVillain> heroVillains = jdbc.query(SELECT_ALL_MEMBERS, new HeroVillainMapper(), organization.getOrganizationID());
     }
 
     public static final class OrganizationMapper implements RowMapper<Organization> {

@@ -34,7 +34,7 @@ CREATE TABLE `Organization` (
     `Description` VARCHAR(50),
     Phone VARCHAR(15) NOT NULL,
     Email VARCHAR(50) NOT NULL,
-    AddressID INT NOT NULL,
+    AddressID INT,
     CONSTRAINT fk_Organization_Address FOREIGN KEY (AddressID)
         REFERENCES Address (AddressID)
 );
@@ -55,7 +55,7 @@ CREATE TABLE Location (
     `Description` VARCHAR(100) NOT NULL,
     Latitude DECIMAL(16 , 14 ) NOT NULL,
     Longitude DECIMAL(17 , 14 ) NOT NULL,
-    AddressID INT NOT NULL,
+    AddressID INT,
     CONSTRAINT fk_Location_Address FOREIGN KEY (AddressID)
         REFERENCES Address(AddressID)
 );

@@ -69,13 +69,13 @@ public class Address {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 11 * hash + Objects.hashCode(this.streetNumber);
-        hash = 11 * hash + Objects.hashCode(this.streetName);
-        hash = 11 * hash + Objects.hashCode(this.city);
-        hash = 11 * hash + Objects.hashCode(this.stateProvince);
-        hash = 11 * hash + Objects.hashCode(this.zipPostalCode);
-        hash = 11 * hash + Objects.hashCode(this.country);
+        int hash = 3;
+        hash = 89 * hash + Objects.hashCode(this.streetNumber);
+        hash = 89 * hash + Objects.hashCode(this.streetName);
+        hash = 89 * hash + Objects.hashCode(this.city);
+        hash = 89 * hash + Objects.hashCode(this.stateProvince);
+        hash = 89 * hash + Objects.hashCode(this.zipPostalCode);
+        hash = 89 * hash + Objects.hashCode(this.country);
         return hash;
     }
 
@@ -108,5 +108,5 @@ public class Address {
         }
         return Objects.equals(this.country, other.country);
     }
-    
+
 }

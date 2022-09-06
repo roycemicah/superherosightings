@@ -59,7 +59,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
             return;
         }
     }
-    
+
     private void setHeroVillainOrganizations(HeroVillain heroVillain) {
         String SELECT_HEROVILLAIN_ORGANIZATIONS = "SELECT * FROM `Organization` o JOIN CharacterOrganization co ON o.OrganizationID = co.OrganizationID JOIN HeroVillain hv ON hv.HeroVillainID = co.HeroVillainID WHERE hv.HeroVillainID = ?";
         List<Organization> organizations = jdbc.query(SELECT_HEROVILLAIN_ORGANIZATIONS, new OrganizationMapper());
@@ -72,7 +72,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
 
         heroVillain.setOrganizations(organizations);
     }
-    
+
     private void setLocationsForHeroVillain(HeroVillain heroVillain) {
         String SELECT_HEROVILLAIN_LOCATIONS = "SELECT l.* FROM Location l JOIN Sighting s ON l.LocationID = s.LocationID JOIN HeroVillain hv ON s.HeroVillainID = hv.HeroVillainID WHERE hv.HeroVillainID = ? GROUP BY l.LocationID";
         List<Location> heroVillainLocations = jdbc.query(SELECT_HEROVILLAIN_LOCATIONS, new LocationMapper(), heroVillain.getHeroVillainID());
@@ -137,7 +137,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
         jdbc.update(DELETE_HEROVILLAIN, heroVillainID);
     }
 
-    private static final class HeroVillainMapper implements RowMapper<HeroVillain> {
+    public static final class HeroVillainMapper implements RowMapper<HeroVillain> {
 
         @Override
         public HeroVillain mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -146,7 +146,6 @@ public class HeroVillainDaoDB implements HeroVillainDao {
             heroVillain.setName(rs.getString("Name"));
             heroVillain.setIsHero(rs.getBoolean("IsHero"));
             heroVillain.setDescription(rs.getString("Description"));
-            //heroVillain.setSuperpowers(rs.getInt("SuperpowerID"));
             return heroVillain;
         }
 

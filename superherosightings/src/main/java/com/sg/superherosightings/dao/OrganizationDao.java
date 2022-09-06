@@ -4,7 +4,6 @@
  */
 package com.sg.superherosightings.dao;
 
-import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Organization;
 import java.util.List;
 
@@ -19,8 +18,5 @@ public interface OrganizationDao {
     public Organization addOrganization(Organization organization);
     public void updateOrganization(Organization organization);
     public void deleteOrganizationByID(int organizationID);
-    
-    //The system must be able to report all of the members of a particular organization.
-    public List<HeroVillain> getAllOrganizationMembers(int organizationID);
     
 }

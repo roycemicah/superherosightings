@@ -4,6 +4,8 @@
  */
 package com.sg.superherosightings.dao;
 
+import com.sg.superherosightings.dao.HeroVillainDaoDB.HeroVillainMapper;
+import com.sg.superherosightings.entities.Address;
 import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Location;
 import java.sql.ResultSet;
@@ -14,6 +16,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -28,39 +31,77 @@ public class LocationDaoDB implements LocationDao {
     @Override
     public Location getLocationByID(int locationID) {
         try {
-            final String SELECT_LOCATION_BY_ID = "SELECT * FROM SuperheroSightings.Location "
-                    + "WHERE LocationID = ?";
+            final String SELECT_LOCATION_BY_ID = "SELECT * FROM SuperheroSightings.Location WHERE LocationID = ?";
             Location location = jdbc.queryForObject(SELECT_LOCATION_BY_ID, new LocationMapper(), locationID);
-
+            // return address of location
+            setLocationAddress(location);
+            setHeroesSighted(location);
             return location;
         } catch (DataAccessException ex) {
             return null;
         }
     }
 
-    public List<HeroVillain> getHeroesSighted(int locationID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void setLocationAddress(Location location) {
+        String SELECT_ADDRESS_FOR_LOCATION = "SELECT * FROM Address WHERE AddressID = (SELECT AddressID FROM Location WHERE LocationID = ?)";
+        Address address = jdbc.queryForObject(SELECT_ADDRESS_FOR_LOCATION, new AddressMapper(), location.getLocationID());
+        location.setAddress(address);
+    }
 
+    private void setHeroesSighted(Location location) {
+        String SELECT_HEROES_SIGHTED = "SELECT hv.* FROM HeroVillain hv JOIN Sighting s ON hv.HeroVillainID = s.HeroVillainID JOIN Location l ON s.LocationID = l.locationID WHERE l.LocationID = ? GROUP BY hv.HeroVillainID";
+        List<HeroVillain> heroVillains = jdbc.query(SELECT_HEROES_SIGHTED, new HeroVillainMapper(), location.getLocationID());
+        location.setHeroVillainsSighted(heroVillains);
     }
 
     @Override
     public List<Location> getAllLocations() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        final String SELECT_LOCATION_BY_ID = "SELECT * FROM SuperheroSightings.Location";
+        List<Location> locations = jdbc.query(SELECT_LOCATION_BY_ID, new LocationMapper());
+
+        for (Location location : locations) {
+            setLocationAddress(location);
+            setHeroesSighted(location);
+        }
+
+        return locations;
     }
 
     @Override
+    @Transactional
     public Location addLocation(Location location) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String ADD_ADDRESS = "INSERT INTO Address(StreetNumber, StreetName, City, StateProvince, ZipPostalCode, Country) VALUES(?,?,?,?,?,?)";
+        jdbc.update(ADD_ADDRESS, location.getAddress().getStreetNumber(), location.getAddress().getStreetName(), location.getAddress().getCity(), location.getAddress().getStateProvince(),
+                location.getAddress().getZipPostalCode(), location.getAddress().getCountry());
+        int addressID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+        String ADD_LOCATION = "INSERT INTO Location(`Name`, `Description`, Latitude, Longitude, AddressID) VALUES (?,?,?,?,?)";
+        jdbc.update(ADD_LOCATION, new LocationMapper(), location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude(), addressID);
+        int locationID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+        location.setLocationID(locationID);
+        return location;
     }
 
     @Override
+    @Transactional
     public void updateLocation(Location location) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM Location WHERE LocationID = ?", Integer.class);
+        String UPDATE_ADDRESS = "UPDATE Address SET StreetNumber = ?, StreetName = ?, City = ?, StateProvince = ?, ZipPostalCode = ?, Country = ? WHERE AddressID = ?";
+        jdbc.update(UPDATE_ADDRESS, location.getAddress().getStreetNumber(), location.getAddress().getStreetName(), location.getAddress().getCity(), location.getAddress().getStateProvince(),
+                location.getAddress().getZipPostalCode(), location.getAddress().getCountry(), addressID);
+        String UPDATE_LOCATION = "UPDATE Location SET `Name` = ?, `Description` = ?, Latitude = ?, Longitude = ? WHERE LocationID = ?";
+        jdbc.update(UPDATE_LOCATION, location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude());
     }
 
     @Override
+    @Transactional
     public void deleteLocationByID(int LocationID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String DELETE_SIGHTING_LOCATION = "DELETE FROM Sighting WHERE LocationID = ?";
+        jdbc.update(DELETE_SIGHTING_LOCATION, LocationID);
+        // must delete the address data that doesn't need to be there, which is from the locationID
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM Location WHERE LocationID = ?", Integer.class);
+        String DELETE_LOCATION_ID = "DELETE FROM Location WHERE LocationID = ?";
+        jdbc.update(DELETE_LOCATION_ID, LocationID);
+        jdbc.update("DELETE FROM Address WHERE AddressID = ?", addressID);
     }
 
     public static final class LocationMapper implements RowMapper<Location> {
