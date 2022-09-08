@@ -4,7 +4,6 @@
  */
 package com.sg.superherosightings.dao;
 
-import com.sg.superherosightings.entities.Location;
 import com.sg.superherosightings.entities.Sighting;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,20 +20,7 @@ public interface SightingDao {
     public void updateSighting(Sighting sighting);
     public void deleteSightingByID(int sightingID);
     
-    //The system must be able to report all of the locations where a particular superhero has been seen.
-    List<Sighting> getSightingsByHeroVillain(int heroVillainID);
-    
-    //The system must be able to report all of the locations where a particular superhero has been seen.
-    List<Sighting> getSightingsByLocation(Location location);
-    
     //The system must be able to report all sightings (hero and location) for a particular date.
-    List<Sighting> getSightingsByDate(LocalDate date);
+    List<Sighting> getSightingsOrderedByDate(LocalDate date);
 
 }
-
-//A user must be able to record a superhero/supervillain sighting for a particular location and date.
-
-//The system must be able to report all of the superheroes sighted at a particular location.
-
-//The system must be able to report all of the locations where a particular superhero has been seen.
-//The system must be able to report all sightings (hero and location) for a particular date.

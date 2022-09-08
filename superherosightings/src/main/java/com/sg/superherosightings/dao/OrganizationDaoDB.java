@@ -5,6 +5,7 @@
 package com.sg.superherosightings.dao;
 
 import com.sg.superherosightings.dao.HeroVillainDaoDB.HeroVillainMapper;
+import com.sg.superherosightings.entities.Address;
 import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Organization;
 import java.sql.ResultSet;
@@ -33,6 +34,7 @@ public class OrganizationDaoDB implements OrganizationDao {
             final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM SuperheroSightings.`Organization` "
                     + "WHERE OrganizationID = ?";
             Organization organization = jdbc.queryForObject(SELECT_ORGANIZATION_BY_ID, new OrganizationMapper(), organizationID);
+            setOrganizationAddress(organization);
             setAllOrganizationMembers(organization);
             return organization;
 
@@ -40,34 +42,50 @@ public class OrganizationDaoDB implements OrganizationDao {
             return null;
         }
     }
-    
+
+    private void setOrganizationAddress(Organization organization) {
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM `Organization` WHERE OrganizationID = ?", Integer.class, organization.getOrganizationID());
+        Address address = jdbc.queryForObject("SELECT * FROM Address WHERE AddressID = ?", new AddressMapper(), addressID);
+        organization.setAddress(address);
+    }
+
     @Override
     public List<Organization> getAllOrganizations() {
         final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM SuperheroSightings.`Organization`";
-            List<Organization> organizations = jdbc.query(SELECT_ORGANIZATION_BY_ID, new OrganizationMapper());
-            
-            for(Organization organization : organizations) {
-                setAllOrganizationMembers(organization);
-            }
-            
-            return organizations;
+        List<Organization> organizations = jdbc.query(SELECT_ORGANIZATION_BY_ID, new OrganizationMapper());
+
+        for (Organization organization : organizations) {
+            setOrganizationAddress(organization);
+            setAllOrganizationMembers(organization);
+        }
+
+        return organizations;
     }
 
     @Override
     @Transactional
     public Organization addOrganization(Organization organization) {
+        final String ADD_ORGANIZATION_ADDRESS = "INSERT INTO Address (StreetNumber, StreetName, City, StateProvince, ZipPostalCode, Country) VALUES (?,?,?,?,?,?)";
+        jdbc.update(ADD_ORGANIZATION_ADDRESS, organization.getAddress().getStreetNumber(), organization.getAddress().getStreetName(), organization.getAddress().getCity(),
+                organization.getAddress().getStateProvince(), organization.getAddress().getZipPostalCode(), organization.getAddress().getCountry());
+        int addressID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         final String ADD_ORGANIZATION = "INSERT INTO `Organization`(`Name`, `Description`, Phone, Email, AddressID) VALUES(?,?,?,?,?)";
-        jdbc.update(ADD_ORGANIZATION, organization.getOrganizationID());
+        jdbc.update(ADD_ORGANIZATION, organization.getName(), organization.getDescription(), organization.getPhone(), organization.getEmail(), addressID);
         organization.setOrganizationID(jdbc.queryForObject("SELECT LAST_INSERT_ID", Integer.class));
         return organization;
     }
 
     @Override
+    @Transactional
     public void updateOrganization(Organization organization) {
         final String DELETE_CHARACTER_ORGANIZATION = "DELETE FROM CharacterOrganization WHERE OrganizationID = ?";
         jdbc.update(DELETE_CHARACTER_ORGANIZATION, organization.getOrganizationID());
-        final String UPDATE_ORGANIZATION = "UPDATE `Organization` SET `Name` = ?, `Description` = ?, Phone = ?, Email = ?, AddressID = ? WHERE OrganizationID = ?";
-        jdbc.update(UPDATE_ORGANIZATION, organization.getName(), organization.getDescription(), organization.getPhone(), organization.getEmail(), organization.getAddress());
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM `Organization` WHERE OrganizationID = ?", Integer.class);
+        final String UPDATE_ORGANIZATION_ADDRESS = "UPDATE Address SET StreetNumber = ?, StreetName = ?, City = ?, StateProvince = ?, ZipPostalCode = ?, Country = ? WHERE AddressID = ?";
+        jdbc.update(UPDATE_ORGANIZATION_ADDRESS, organization.getAddress().getStreetNumber(), organization.getAddress().getStreetName(), organization.getAddress().getCity(),
+                organization.getAddress().getStateProvince(), organization.getAddress().getZipPostalCode(), organization.getAddress().getCountry(), addressID);
+        final String UPDATE_ORGANIZATION = "UPDATE `Organization` SET `Name` = ?, `Description` = ?, Phone = ?, Email = ? WHERE OrganizationID = ?";
+        jdbc.update(UPDATE_ORGANIZATION, organization.getName(), organization.getDescription(), organization.getPhone(), organization.getEmail(), organization.getOrganizationID());
 
         String ADD_CHARACTER_ORGANIZATION = "INSERT INTO CharacterOrganization(HeroVillainID, OrganizationID) VALUES(?,?)";
 
@@ -77,9 +95,12 @@ public class OrganizationDaoDB implements OrganizationDao {
     }
 
     @Override
+    @Transactional
     public void deleteOrganizationByID(int OrganizationID) {
         final String DELETE_CHARACTER_ORGANIZATION = "DELETE FROM CharacterOrganization WHERE OrganizationID = ?";
         jdbc.update(DELETE_CHARACTER_ORGANIZATION, OrganizationID);
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM `Organization` WHERE OrganizationID = ?", Integer.class);
+        jdbc.update("DELETE FROM Address WHERE AddressID = ?", addressID);
         final String DELETE_ORGANIZATION = "DELETE FROM `Organization` WHERE OrganizationID = ?";
         jdbc.update(DELETE_ORGANIZATION, OrganizationID);
     }

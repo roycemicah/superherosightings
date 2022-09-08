@@ -29,7 +29,7 @@ public class SuperpowerDaoDB implements SuperpowerDao {
     public Superpower getSuperpowerByID(int superpowerID) {
         try {
             final String SELECT_SUPERPOWER_BY_ID = "SELECT * FROM SuperheroSightings.Superpower"
-                    + "WHERE SuperpowerID = ?";
+                    + " WHERE SuperpowerID = ?";
             Superpower superpower = jdbc.queryForObject(SELECT_SUPERPOWER_BY_ID, new SuperpowerMapper(), superpowerID);
             return superpower;
         } catch (DataAccessException ex) {
@@ -47,7 +47,7 @@ public class SuperpowerDaoDB implements SuperpowerDao {
     @Transactional
     public Superpower addSuperpower(Superpower superpower) {
         final String ADD_SUPERPOWER = "INSERT INTO SuperheroSightings.Superpower(`Name`, `Description`) VALUES(?,?)";
-        jdbc.update(ADD_SUPERPOWER, superpower.getName());
+        jdbc.update(ADD_SUPERPOWER, superpower.getName(), superpower.getDescription());
         int superpowerID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         superpower.setSuperpowerID(superpowerID);
         return superpower;

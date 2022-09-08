@@ -4,13 +4,22 @@
  */
 package com.sg.superherosightings.dao;
 
+import com.sg.superherosightings.dao.HeroVillainDaoDB.HeroVillainMapper;
+import com.sg.superherosightings.dao.LocationDaoDB.LocationMapper;
+import com.sg.superherosightings.entities.Address;
+import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Location;
 import com.sg.superherosightings.entities.Sighting;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -18,46 +27,91 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class SightingDaoDB implements SightingDao {
+
     @Autowired
     JdbcTemplate jdbc;
 
     @Override
     public Sighting getSightingByID(int sightingID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String SELECT_SIGHTING_BY_ID = "SELECT SightingID, `Date` FROM Sighting WHERE SightingID = ?";
+        Sighting sighting = jdbc.queryForObject(SELECT_SIGHTING_BY_ID, new SightingMapper(), sightingID);
+        setHeroSighted(sighting);
+        setSightingLocation(sighting);
+        return sighting;
+    }
+
+    private void setHeroSighted(Sighting sighting) {
+        String SELECT_SIGHTING_HERO = "SELECT * FROM HeroVillain WHERE HeroVillainID = (SELECT HeroVillainID FROM Sighting WHERE SightingID = ?)";
+        HeroVillain hero = jdbc.queryForObject(SELECT_SIGHTING_HERO, new HeroVillainMapper(), sighting.getSightingID());
+        sighting.setHeroVillain(hero);
+    }
+
+    private void setSightingLocation(Sighting sighting) {
+        String SELECT_SIGHTING_LOCATION = "SELECT * FROM Location WHERE LocationID = (SELECT LocationID FROM Sighting WHERE SightingID = ?)";
+        Location location = jdbc.queryForObject(SELECT_SIGHTING_LOCATION, new LocationMapper(), sighting.getSightingID());
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM Location WHERE LocationID = ?", Integer.class, location.getLocationID());
+        Address address = jdbc.queryForObject("SELECT * FROM Address WHERE AddressID = ?", new AddressMapper(), addressID);
+        location.setAddress(address);
+        sighting.setLocation(location);
     }
 
     @Override
     public List<Sighting> getAllSightings() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String SELECT_ALL_SIGHTINGS = "SELECT SightingID, `Date` FROM Sighting";
+        List<Sighting> sightings = jdbc.query(SELECT_ALL_SIGHTINGS, new SightingMapper());
+
+        for (Sighting sighting : sightings) {
+            setHeroSighted(sighting);
+            setSightingLocation(sighting);
+        }
+        
+        return sightings;
     }
 
     @Override
+    @Transactional
     public Sighting addSighting(Sighting sighting) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String ADD_SIGHTING = "INSERT INTO Sighting(`Date`, LocationID, HeroVillainID) VALUES(?,?,?)";
+        jdbc.update(ADD_SIGHTING, Date.valueOf(sighting.getDate()), sighting.getLocation().getLocationID(), sighting.getHeroVillain().getHeroVillainID());
+        int sightingID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+        sighting.setSightingID(sightingID);
+        return sighting;
     }
 
     @Override
     public void updateSighting(Sighting sighting) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String UPDATE_SIGHTING = "UPDATE Sighting SET `Date` = ?, LocationID = ?, HeroVillainID = ?";
+        jdbc.update(UPDATE_SIGHTING, Date.valueOf(sighting.getDate()), sighting.getLocation().getLocationID(), sighting.getHeroVillain().getHeroVillainID());
     }
 
     @Override
     public void deleteSightingByID(int sightingID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String DELETE_SIGHTING = "DELETE FROM Sighting WHERE SightingID = ?";
+        jdbc.update(DELETE_SIGHTING, sightingID);
     }
 
     @Override
-    public List<Sighting> getSightingsByHeroVillain(int heroVillainID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Sighting> getSightingsOrderedByDate(LocalDate date) {
+        String SELECT_ALL_SIGHTINGS_ORDERED_BY_DATE = "SELECT SightingID, `Date` FROM Sighting ORDER BY `Date` DESC";
+        List<Sighting> sightings = jdbc.query(SELECT_ALL_SIGHTINGS_ORDERED_BY_DATE, new SightingMapper());
+
+        for (Sighting sighting : sightings) {
+            setHeroSighted(sighting);
+            setSightingLocation(sighting);
+        }
+        
+        return sightings;
     }
 
-    @Override
-    public List<Sighting> getSightingsByLocation(Location location) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public static final class SightingMapper implements RowMapper<Sighting> {
 
-    @Override
-    public List<Sighting> getSightingsByDate(LocalDate date) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        @Override
+        public Sighting mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Sighting sighting = new Sighting();
+            sighting.setSightingID(rs.getInt("SightingID"));
+            sighting.setDate(rs.getDate("Date").toLocalDate());
+            return sighting;
+        }
+
     }
 }
