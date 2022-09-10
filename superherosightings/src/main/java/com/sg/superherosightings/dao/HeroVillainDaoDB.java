@@ -34,7 +34,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
 
     @Override
     public HeroVillain getHeroVillainByID(int heroVillainID) {
-        String SELECT_HERO_BY_ID = "SELECT * FROM SuperheroSightings.HeroVillain "
+        String SELECT_HERO_BY_ID = "SELECT * FROM HeroVillain "
                 + "WHERE HeroVillainID = ?";
         try {
             HeroVillain heroVillain = jdbc.queryForObject(SELECT_HERO_BY_ID, new HeroVillainMapper(), heroVillainID);
@@ -50,7 +50,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
 
     // setting object thus void
     private void setHeroVillainSuperpower(HeroVillain heroVillain) {
-        String SELECT_HERO_VILLAIN_SUPERPOWER = "SELECT * FROM SuperheroSightings.Superpower WHERE SuperpowerID = ( SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)";
+        String SELECT_HERO_VILLAIN_SUPERPOWER = "SELECT * FROM Superpower WHERE SuperpowerID = ( SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)";
 
         try {
             Superpower superpower = jdbc.queryForObject(SELECT_HERO_VILLAIN_SUPERPOWER, new SuperpowerMapper(), heroVillain.getHeroVillainID());
@@ -62,7 +62,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
 
     private void setHeroVillainOrganizations(HeroVillain heroVillain) {
         String SELECT_HEROVILLAIN_ORGANIZATIONS = "SELECT * FROM `Organization` o JOIN CharacterOrganization co ON o.OrganizationID = co.OrganizationID JOIN HeroVillain hv ON hv.HeroVillainID = co.HeroVillainID WHERE hv.HeroVillainID = ?";
-        List<Organization> organizations = jdbc.query(SELECT_HEROVILLAIN_ORGANIZATIONS, new OrganizationMapper());
+        List<Organization> organizations = jdbc.query(SELECT_HEROVILLAIN_ORGANIZATIONS, new OrganizationMapper(), heroVillain.getHeroVillainID());
 
         for (Organization organization : organizations) {
             String SELECT_ORGANIZATION_ADDRESS = "SELECT * FROM Address WHERE AddressID = (SELECT AddressID FROM `Organization` WHERE OrganizationID = ?)";
@@ -81,11 +81,13 @@ public class HeroVillainDaoDB implements HeroVillainDao {
             Address address = jdbc.queryForObject("SELECT * FROM Address WHERE AddressID = (SELECT AddressID FROM Location WHERE LocationID = ?)", new AddressMapper(), location.getLocationID());
             location.setAddress(address);
         }
+        
+        heroVillain.setLocations(heroVillainLocations);
     }
 
     @Override
     public List<HeroVillain> getAllHeroVillains() {
-        String SELECT_HEROES = "SELECT * FROM SuperheroSightings.HeroVillain";
+        String SELECT_HEROES = "SELECT * FROM HeroVillain";
         List<HeroVillain> heroes = jdbc.query(SELECT_HEROES, new HeroVillainMapper());
 
         for (HeroVillain hero : heroes) {
@@ -101,7 +103,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
     public HeroVillain addHeroVillain(HeroVillain heroVillain) {
         String ADD_HEROVILLAIN = "INSERT INTO HeroVillain(`Name`, IsHero, `Description`, SuperpowerID) VALUES(?,?,?,?)";
         jdbc.update(ADD_HEROVILLAIN, heroVillain.getName(), heroVillain.isIsHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID());
-        heroVillain.setHeroVillainID(jdbc.queryForObject("SELECT LAST_INSERT_ID", Integer.class));
+        heroVillain.setHeroVillainID(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
         String ADD_HEROVILLAIN_ORGANIZATION = "INSERT INTO CharacterOrganization(HeroVillainID, OrganizationID) VALUES(?,?)";
 
         for (Organization organization : heroVillain.getOrganizations()) {

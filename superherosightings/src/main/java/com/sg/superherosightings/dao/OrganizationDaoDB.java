@@ -31,7 +31,7 @@ public class OrganizationDaoDB implements OrganizationDao {
     @Override
     public Organization getOrganizationByID(int organizationID) {
         try {
-            final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM SuperheroSightings.`Organization` "
+            final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM `Organization` "
                     + "WHERE OrganizationID = ?";
             Organization organization = jdbc.queryForObject(SELECT_ORGANIZATION_BY_ID, new OrganizationMapper(), organizationID);
             setOrganizationAddress(organization);
@@ -48,10 +48,15 @@ public class OrganizationDaoDB implements OrganizationDao {
         Address address = jdbc.queryForObject("SELECT * FROM Address WHERE AddressID = ?", new AddressMapper(), addressID);
         organization.setAddress(address);
     }
+    
+    private void setAllOrganizationMembers(Organization organization) {
+        final String SELECT_ALL_MEMBERS = "SELECT hv.* FROM HeroVillain hv JOIN CharacterOrganization co ON hv.HeroVillainID = co.HeroVillainID JOIN Organization o ON co.OrganizationID = o.OrganizationID WHERE o.OrganizationID = ?";
+        List<HeroVillain> heroVillains = jdbc.query(SELECT_ALL_MEMBERS, new HeroVillainMapper(), organization.getOrganizationID());
+    }
 
     @Override
     public List<Organization> getAllOrganizations() {
-        final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM SuperheroSightings.`Organization`";
+        final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM `Organization`";
         List<Organization> organizations = jdbc.query(SELECT_ORGANIZATION_BY_ID, new OrganizationMapper());
 
         for (Organization organization : organizations) {
@@ -71,7 +76,7 @@ public class OrganizationDaoDB implements OrganizationDao {
         int addressID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         final String ADD_ORGANIZATION = "INSERT INTO `Organization`(`Name`, `Description`, Phone, Email, AddressID) VALUES(?,?,?,?,?)";
         jdbc.update(ADD_ORGANIZATION, organization.getName(), organization.getDescription(), organization.getPhone(), organization.getEmail(), addressID);
-        organization.setOrganizationID(jdbc.queryForObject("SELECT LAST_INSERT_ID", Integer.class));
+        organization.setOrganizationID(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
         return organization;
     }
 
@@ -96,18 +101,13 @@ public class OrganizationDaoDB implements OrganizationDao {
 
     @Override
     @Transactional
-    public void deleteOrganizationByID(int OrganizationID) {
+    public void deleteOrganizationByID(int organizationID) {
         final String DELETE_CHARACTER_ORGANIZATION = "DELETE FROM CharacterOrganization WHERE OrganizationID = ?";
-        jdbc.update(DELETE_CHARACTER_ORGANIZATION, OrganizationID);
-        int addressID = jdbc.queryForObject("SELECT AddressID FROM `Organization` WHERE OrganizationID = ?", Integer.class);
-        jdbc.update("DELETE FROM Address WHERE AddressID = ?", addressID);
+        jdbc.update(DELETE_CHARACTER_ORGANIZATION, organizationID);
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM `Organization` WHERE OrganizationID = ?", Integer.class, organizationID);
         final String DELETE_ORGANIZATION = "DELETE FROM `Organization` WHERE OrganizationID = ?";
-        jdbc.update(DELETE_ORGANIZATION, OrganizationID);
-    }
-
-    private void setAllOrganizationMembers(Organization organization) {
-        final String SELECT_ALL_MEMBERS = "SELECT hv.* FROM HeroVillain hv JOIN CharacterOrganization co ON hv.HeroVillainID = co.HeroVillainID JOIN Organization o ON co.OrganizationID = o.OrganizationID WHERE o.OrganizationID = ?";
-        List<HeroVillain> heroVillains = jdbc.query(SELECT_ALL_MEMBERS, new HeroVillainMapper(), organization.getOrganizationID());
+        jdbc.update(DELETE_ORGANIZATION, organizationID);
+        jdbc.update("DELETE FROM Address WHERE AddressID = ?", addressID);
     }
 
     public static final class OrganizationMapper implements RowMapper<Organization> {

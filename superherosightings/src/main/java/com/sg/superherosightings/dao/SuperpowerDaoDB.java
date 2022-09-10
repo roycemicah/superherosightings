@@ -28,7 +28,7 @@ public class SuperpowerDaoDB implements SuperpowerDao {
     @Override
     public Superpower getSuperpowerByID(int superpowerID) {
         try {
-            final String SELECT_SUPERPOWER_BY_ID = "SELECT * FROM SuperheroSightings.Superpower"
+            final String SELECT_SUPERPOWER_BY_ID = "SELECT * FROM Superpower"
                     + " WHERE SuperpowerID = ?";
             Superpower superpower = jdbc.queryForObject(SELECT_SUPERPOWER_BY_ID, new SuperpowerMapper(), superpowerID);
             return superpower;
@@ -39,14 +39,14 @@ public class SuperpowerDaoDB implements SuperpowerDao {
 
     @Override
     public List<Superpower> getAllSuperpowers() {
-        final String SELECT_SUPERPOWERS = "SELECT * FROM SuperheroSightings.Superpower";
+        final String SELECT_SUPERPOWERS = "SELECT * FROM Superpower";
         return jdbc.query(SELECT_SUPERPOWERS, new SuperpowerMapper());
     }
 
     @Override
     @Transactional
     public Superpower addSuperpower(Superpower superpower) {
-        final String ADD_SUPERPOWER = "INSERT INTO SuperheroSightings.Superpower(`Name`, `Description`) VALUES(?,?)";
+        final String ADD_SUPERPOWER = "INSERT INTO Superpower(`Name`, `Description`) VALUES(?,?)";
         jdbc.update(ADD_SUPERPOWER, superpower.getName(), superpower.getDescription());
         int superpowerID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         superpower.setSuperpowerID(superpowerID);
@@ -55,15 +55,15 @@ public class SuperpowerDaoDB implements SuperpowerDao {
 
     @Override
     public void updateSuperpower(Superpower superpower) {
-        String UPDATE_SUPERPOWER = "UPDATE SuperheroSightings.Superpower SET `Name` = ?, `Description` = ? WHERE SuperpowerID = ?";
+        String UPDATE_SUPERPOWER = "UPDATE Superpower SET `Name` = ?, `Description` = ? WHERE SuperpowerID = ?";
         jdbc.update(UPDATE_SUPERPOWER, superpower.getName(), superpower.getDescription(), superpower.getSuperpowerID());
     }
 
     @Override
     @Transactional
     public void deleteSuperpowerByID(int superpowerID) {
-        jdbc.update("UPDATE SuperheroSightings.HeroVillain SET SuperpowerID = null WHERE SuperpowerID = ?", superpowerID);
-        String DELETE_SUPERPOWER = "DELETE FROM SuperheroSightings.Superpower WHERE SuperpowerID = ?";
+        jdbc.update("UPDATE HeroVillain SET SuperpowerID = null WHERE SuperpowerID = ?", superpowerID);
+        String DELETE_SUPERPOWER = "DELETE FROM Superpower WHERE SuperpowerID = ?";
         jdbc.update(DELETE_SUPERPOWER, superpowerID);
     }
 

@@ -31,7 +31,7 @@ public class LocationDaoDB implements LocationDao {
     @Override
     public Location getLocationByID(int locationID) {
         try {
-            final String SELECT_LOCATION_BY_ID = "SELECT * FROM SuperheroSightings.Location WHERE LocationID = ?";
+            final String SELECT_LOCATION_BY_ID = "SELECT * FROM Location WHERE LocationID = ?";
             Location location = jdbc.queryForObject(SELECT_LOCATION_BY_ID, new LocationMapper(), locationID);
             // return address of location
             setLocationAddress(location);
@@ -56,7 +56,7 @@ public class LocationDaoDB implements LocationDao {
 
     @Override
     public List<Location> getAllLocations() {
-        final String SELECT_LOCATION_BY_ID = "SELECT * FROM SuperheroSightings.Location";
+        final String SELECT_LOCATION_BY_ID = "SELECT * FROM Location";
         List<Location> locations = jdbc.query(SELECT_LOCATION_BY_ID, new LocationMapper());
 
         for (Location location : locations) {
@@ -75,7 +75,7 @@ public class LocationDaoDB implements LocationDao {
                 location.getAddress().getZipPostalCode(), location.getAddress().getCountry());
         int addressID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         String ADD_LOCATION = "INSERT INTO Location(`Name`, `Description`, Latitude, Longitude, AddressID) VALUES (?,?,?,?,?)";
-        jdbc.update(ADD_LOCATION, new LocationMapper(), location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude(), addressID);
+        jdbc.update(ADD_LOCATION, location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude(), addressID);
         int locationID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         location.setLocationID(locationID);
         return location;
@@ -94,13 +94,13 @@ public class LocationDaoDB implements LocationDao {
 
     @Override
     @Transactional
-    public void deleteLocationByID(int LocationID) {
+    public void deleteLocationByID(int locationID) {
         String DELETE_SIGHTING_LOCATION = "DELETE FROM Sighting WHERE LocationID = ?";
-        jdbc.update(DELETE_SIGHTING_LOCATION, LocationID);
+        jdbc.update(DELETE_SIGHTING_LOCATION, locationID);
         // must delete the address data that doesn't need to be there, which is from the locationID
-        int addressID = jdbc.queryForObject("SELECT AddressID FROM Location WHERE LocationID = ?", Integer.class);
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM Location WHERE LocationID = ?", Integer.class, locationID);
         String DELETE_LOCATION_ID = "DELETE FROM Location WHERE LocationID = ?";
-        jdbc.update(DELETE_LOCATION_ID, LocationID);
+        jdbc.update(DELETE_LOCATION_ID, locationID);
         jdbc.update("DELETE FROM Address WHERE AddressID = ?", addressID);
     }
 
