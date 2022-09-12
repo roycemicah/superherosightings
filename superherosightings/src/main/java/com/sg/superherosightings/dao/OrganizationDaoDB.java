@@ -5,9 +5,11 @@
 package com.sg.superherosightings.dao;
 
 import com.sg.superherosightings.dao.HeroVillainDaoDB.HeroVillainMapper;
+import com.sg.superherosightings.dao.SuperpowerDaoDB.SuperpowerMapper;
 import com.sg.superherosightings.entities.Address;
 import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Organization;
+import com.sg.superherosightings.entities.Superpower;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -52,6 +54,13 @@ public class OrganizationDaoDB implements OrganizationDao {
     private void setAllOrganizationMembers(Organization organization) {
         final String SELECT_ALL_MEMBERS = "SELECT hv.* FROM HeroVillain hv JOIN CharacterOrganization co ON hv.HeroVillainID = co.HeroVillainID JOIN Organization o ON co.OrganizationID = o.OrganizationID WHERE o.OrganizationID = ?";
         List<HeroVillain> heroVillains = jdbc.query(SELECT_ALL_MEMBERS, new HeroVillainMapper(), organization.getOrganizationID());
+        
+        for(HeroVillain heroVillain : heroVillains) {
+            Superpower superpower = jdbc.queryForObject("SELECT * FROM Superpower WHERE SuperpowerID = (SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)", new SuperpowerMapper(), heroVillain.getHeroVillainID());
+            heroVillain.setSuperpower(superpower);
+        }
+        
+        organization.setMembers(heroVillains);
     }
 
     @Override
@@ -77,6 +86,11 @@ public class OrganizationDaoDB implements OrganizationDao {
         final String ADD_ORGANIZATION = "INSERT INTO `Organization`(`Name`, `Description`, Phone, Email, AddressID) VALUES(?,?,?,?,?)";
         jdbc.update(ADD_ORGANIZATION, organization.getName(), organization.getDescription(), organization.getPhone(), organization.getEmail(), addressID);
         organization.setOrganizationID(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
+        
+        for(HeroVillain heroVillain : organization.getMembers()) {
+            jdbc.update("INSERT INTO CharacterOrganization(HeroVillainID, OrganizationID) VALUES(?,?)", heroVillain.getHeroVillainID(), organization.getOrganizationID());
+        }
+        
         return organization;
     }
 
@@ -85,7 +99,7 @@ public class OrganizationDaoDB implements OrganizationDao {
     public void updateOrganization(Organization organization) {
         final String DELETE_CHARACTER_ORGANIZATION = "DELETE FROM CharacterOrganization WHERE OrganizationID = ?";
         jdbc.update(DELETE_CHARACTER_ORGANIZATION, organization.getOrganizationID());
-        int addressID = jdbc.queryForObject("SELECT AddressID FROM `Organization` WHERE OrganizationID = ?", Integer.class);
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM `Organization` WHERE OrganizationID = ?", Integer.class, organization.getOrganizationID());
         final String UPDATE_ORGANIZATION_ADDRESS = "UPDATE Address SET StreetNumber = ?, StreetName = ?, City = ?, StateProvince = ?, ZipPostalCode = ?, Country = ? WHERE AddressID = ?";
         jdbc.update(UPDATE_ORGANIZATION_ADDRESS, organization.getAddress().getStreetNumber(), organization.getAddress().getStreetName(), organization.getAddress().getCity(),
                 organization.getAddress().getStateProvince(), organization.getAddress().getZipPostalCode(), organization.getAddress().getCountry(), addressID);

@@ -5,9 +5,11 @@
 package com.sg.superherosightings.dao;
 
 import com.sg.superherosightings.dao.HeroVillainDaoDB.HeroVillainMapper;
+import com.sg.superherosightings.dao.SuperpowerDaoDB.SuperpowerMapper;
 import com.sg.superherosightings.entities.Address;
 import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Location;
+import com.sg.superherosightings.entities.Superpower;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -29,6 +31,7 @@ public class LocationDaoDB implements LocationDao {
     JdbcTemplate jdbc;
 
     @Override
+    @Transactional
     public Location getLocationByID(int locationID) {
         try {
             final String SELECT_LOCATION_BY_ID = "SELECT * FROM Location WHERE LocationID = ?";
@@ -51,10 +54,17 @@ public class LocationDaoDB implements LocationDao {
     private void setHeroesSighted(Location location) {
         String SELECT_HEROES_SIGHTED = "SELECT hv.* FROM HeroVillain hv JOIN Sighting s ON hv.HeroVillainID = s.HeroVillainID JOIN Location l ON s.LocationID = l.locationID WHERE l.LocationID = ? GROUP BY hv.HeroVillainID";
         List<HeroVillain> heroVillains = jdbc.query(SELECT_HEROES_SIGHTED, new HeroVillainMapper(), location.getLocationID());
+
+        for (HeroVillain heroVillain : heroVillains) {
+            Superpower superpower = jdbc.queryForObject("SELECT * FROM Superpower WHERE SuperpowerID = (SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)", new SuperpowerMapper(), heroVillain.getHeroVillainID());
+            heroVillain.setSuperpower(superpower);
+        }
+
         location.setHeroVillainsSighted(heroVillains);
     }
 
     @Override
+    @Transactional
     public List<Location> getAllLocations() {
         final String SELECT_LOCATION_BY_ID = "SELECT * FROM Location";
         List<Location> locations = jdbc.query(SELECT_LOCATION_BY_ID, new LocationMapper());
@@ -84,12 +94,12 @@ public class LocationDaoDB implements LocationDao {
     @Override
     @Transactional
     public void updateLocation(Location location) {
-        int addressID = jdbc.queryForObject("SELECT AddressID FROM Location WHERE LocationID = ?", Integer.class);
+        int addressID = jdbc.queryForObject("SELECT AddressID FROM Location WHERE LocationID = ?", Integer.class, location.getLocationID());
         String UPDATE_ADDRESS = "UPDATE Address SET StreetNumber = ?, StreetName = ?, City = ?, StateProvince = ?, ZipPostalCode = ?, Country = ? WHERE AddressID = ?";
         jdbc.update(UPDATE_ADDRESS, location.getAddress().getStreetNumber(), location.getAddress().getStreetName(), location.getAddress().getCity(), location.getAddress().getStateProvince(),
                 location.getAddress().getZipPostalCode(), location.getAddress().getCountry(), addressID);
         String UPDATE_LOCATION = "UPDATE Location SET `Name` = ?, `Description` = ?, Latitude = ?, Longitude = ? WHERE LocationID = ?";
-        jdbc.update(UPDATE_LOCATION, location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude());
+        jdbc.update(UPDATE_LOCATION, location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude(), location.getLocationID());
     }
 
     @Override

@@ -6,10 +6,12 @@ package com.sg.superherosightings.dao;
 
 import com.sg.superherosightings.dao.HeroVillainDaoDB.HeroVillainMapper;
 import com.sg.superherosightings.dao.LocationDaoDB.LocationMapper;
+import com.sg.superherosightings.dao.SuperpowerDaoDB.SuperpowerMapper;
 import com.sg.superherosightings.entities.Address;
 import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Location;
 import com.sg.superherosightings.entities.Sighting;
+import com.sg.superherosightings.entities.Superpower;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,6 +45,8 @@ public class SightingDaoDB implements SightingDao {
     private void setHeroSighted(Sighting sighting) {
         String SELECT_SIGHTING_HERO = "SELECT * FROM HeroVillain WHERE HeroVillainID = (SELECT HeroVillainID FROM Sighting WHERE SightingID = ?)";
         HeroVillain hero = jdbc.queryForObject(SELECT_SIGHTING_HERO, new HeroVillainMapper(), sighting.getSightingID());
+        Superpower superpower = jdbc.queryForObject("SELECT * FROM Superpower WHERE SuperpowerID = (SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)", new SuperpowerMapper(), hero.getHeroVillainID());
+        hero.setSuperpower(superpower);
         sighting.setHeroVillain(hero);
     }
 
