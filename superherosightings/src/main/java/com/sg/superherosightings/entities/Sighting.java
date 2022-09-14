@@ -22,8 +22,8 @@ public class Sighting {
         return sightingID;
     }
 
-    public void setSightingID(int SightingID) {
-        this.sightingID = SightingID;
+    public void setSightingID(int sightingID) {
+        this.sightingID = sightingID;
     }
 
     public Location getLocation() {
@@ -53,10 +53,10 @@ public class Sighting {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 79 * hash + this.sightingID;
-        hash = 79 * hash + Objects.hashCode(this.location);
-        hash = 79 * hash + Objects.hashCode(this.heroVillain);
-        hash = 79 * hash + Objects.hashCode(this.date);
+        hash = 43 * hash + this.sightingID;
+        hash = 43 * hash + Objects.hashCode(this.location);
+        hash = 43 * hash + Objects.hashCode(this.heroVillain);
+        hash = 43 * hash + Objects.hashCode(this.date);
         return hash;
     }
 

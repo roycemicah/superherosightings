@@ -5,7 +5,6 @@
 package com.sg.superherosightings.dao;
 
 import com.sg.superherosightings.entities.Sighting;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -21,6 +20,6 @@ public interface SightingDao {
     public void deleteSightingByID(int sightingID);
     
     //The system must be able to report all sightings (hero and location) for a particular date.
-    List<Sighting> getSightingsOrderedByDate(LocalDate date);
+    List<Sighting> getSightingsOrderedByDate();
 
 }
