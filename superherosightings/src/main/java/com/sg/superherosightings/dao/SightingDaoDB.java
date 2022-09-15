@@ -89,8 +89,8 @@ public class SightingDaoDB implements SightingDao {
 
     @Override
     public void updateSighting(Sighting sighting) {
-        String UPDATE_SIGHTING = "UPDATE Sighting SET `Date` = ?, LocationID = ?, HeroVillainID = ?";
-        jdbc.update(UPDATE_SIGHTING, Date.valueOf(sighting.getDate()), sighting.getLocation().getLocationID(), sighting.getHeroVillain().getHeroVillainID());
+        String UPDATE_SIGHTING = "UPDATE Sighting SET `Date` = ?, LocationID = ?, HeroVillainID = ? WHERE SightingID = ?";
+        jdbc.update(UPDATE_SIGHTING, Date.valueOf(sighting.getDate()), sighting.getLocation().getLocationID(), sighting.getHeroVillain().getHeroVillainID(), sighting.getSightingID());
     }
 
     @Override

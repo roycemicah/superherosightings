@@ -61,7 +61,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
     }
 
     private void setHeroVillainOrganizations(HeroVillain heroVillain) {
-        String SELECT_HEROVILLAIN_ORGANIZATIONS = "SELECT * FROM `Organization` o JOIN CharacterOrganization co ON o.OrganizationID = co.OrganizationID JOIN HeroVillain hv ON hv.HeroVillainID = co.HeroVillainID WHERE hv.HeroVillainID = ?";
+        String SELECT_HEROVILLAIN_ORGANIZATIONS = "SELECT * FROM `Organization` o JOIN CharacterOrganization co ON o.OrganizationID = co.OrganizationID JOIN HeroVillain hv ON hv.HeroVillainID = co.HeroVillainID WHERE co.HeroVillainID = ?";
         List<Organization> organizations = jdbc.query(SELECT_HEROVILLAIN_ORGANIZATIONS, new OrganizationMapper(), heroVillain.getHeroVillainID());
 
         for (Organization organization : organizations) {
