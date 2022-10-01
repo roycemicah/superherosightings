@@ -16,7 +16,7 @@ public class HeroVillain {
     
     int heroVillainID;
     String name;
-    boolean IsHero;
+    boolean isHero;
     String description;
     Superpower superpower;
     List<Location> locations = new ArrayList<>();
@@ -26,8 +26,8 @@ public class HeroVillain {
         return heroVillainID;
     }
 
-    public void setHeroVillainID(int HeroVillainID) {
-        this.heroVillainID = HeroVillainID;
+    public void setHeroVillainID(int heroVillainID) {
+        this.heroVillainID = heroVillainID;
     }
 
     public String getName() {
@@ -38,12 +38,12 @@ public class HeroVillain {
         this.name = name;
     }
 
-    public boolean isIsHero() {
-        return IsHero;
+    public boolean isHero() {
+        return isHero;
     }
 
-    public void setIsHero(boolean IsHero) {
-        this.IsHero = IsHero;
+    public void setIsHero(boolean isHero) {
+        this.isHero = isHero;
     }
 
     public String getDescription() {
@@ -83,7 +83,7 @@ public class HeroVillain {
         int hash = 7;
         hash = 79 * hash + this.heroVillainID;
         hash = 79 * hash + Objects.hashCode(this.name);
-        hash = 79 * hash + (this.IsHero ? 1 : 0);
+        hash = 79 * hash + (this.isHero ? 1 : 0);
         hash = 79 * hash + Objects.hashCode(this.description);
         hash = 79 * hash + Objects.hashCode(this.superpower);
         hash = 79 * hash + Objects.hashCode(this.locations);
@@ -106,7 +106,7 @@ public class HeroVillain {
         if (this.heroVillainID != other.heroVillainID) {
             return false;
         }
-        if (this.IsHero != other.IsHero) {
+        if (this.isHero != other.isHero) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {

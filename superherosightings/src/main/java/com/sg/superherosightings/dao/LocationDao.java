@@ -18,5 +18,5 @@ public interface LocationDao {
     public Location addLocation(Location location);
     public void updateLocation(Location location);
     public void deleteLocationByID(int locationID);
-    
+
 }

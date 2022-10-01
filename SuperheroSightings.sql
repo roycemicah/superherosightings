@@ -56,6 +56,7 @@ CREATE TABLE Location (
     Latitude DECIMAL(16 , 14 ) NOT NULL,
     Longitude DECIMAL(17 , 14 ) NOT NULL,
     AddressID INT,
+    Image MEDIUMBLOB,
     CONSTRAINT fk_Location_Address FOREIGN KEY (AddressID)
         REFERENCES Address(AddressID)
 );

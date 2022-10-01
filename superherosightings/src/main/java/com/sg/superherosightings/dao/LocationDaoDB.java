@@ -50,7 +50,7 @@ public class LocationDaoDB implements LocationDao {
         Address address = jdbc.queryForObject(SELECT_ADDRESS_FOR_LOCATION, new AddressMapper(), location.getLocationID());
         location.setAddress(address);
     }
-
+    // List on each location object
     private void setHeroesSighted(Location location) {
         String SELECT_HEROES_SIGHTED = "SELECT hv.* FROM HeroVillain hv JOIN Sighting s ON hv.HeroVillainID = s.HeroVillainID JOIN Location l ON s.LocationID = l.locationID WHERE l.LocationID = ? GROUP BY hv.HeroVillainID";
         List<HeroVillain> heroVillains = jdbc.query(SELECT_HEROES_SIGHTED, new HeroVillainMapper(), location.getLocationID());
@@ -84,8 +84,8 @@ public class LocationDaoDB implements LocationDao {
         jdbc.update(ADD_ADDRESS, location.getAddress().getStreetNumber(), location.getAddress().getStreetName(), location.getAddress().getCity(), location.getAddress().getStateProvince(),
                 location.getAddress().getZipPostalCode(), location.getAddress().getCountry());
         int addressID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
-        String ADD_LOCATION = "INSERT INTO Location(`Name`, `Description`, Latitude, Longitude, AddressID) VALUES (?,?,?,?,?)";
-        jdbc.update(ADD_LOCATION, location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude(), addressID);
+        String ADD_LOCATION = "INSERT INTO Location(`Name`, `Description`, Latitude, Longitude, AddressID, Image) VALUES (?,?,?,?,?,?)";
+        jdbc.update(ADD_LOCATION, location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude(), addressID, location.getImage());
         int locationID = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         location.setLocationID(locationID);
         return location;
@@ -124,6 +124,7 @@ public class LocationDaoDB implements LocationDao {
             location.setDescription(rs.getString("Description"));
             location.setLatitude(rs.getDouble("Latitude"));
             location.setLongitude(rs.getDouble("Longitude"));
+            location.setImage(rs.getBytes("Image"));
 
             return location;
         }

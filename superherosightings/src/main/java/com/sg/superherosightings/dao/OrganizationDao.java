@@ -18,5 +18,5 @@ public interface OrganizationDao {
     public Organization addOrganization(Organization organization);
     public void updateOrganization(Organization organization);
     public void deleteOrganizationByID(int organizationID);
-    
+
 }

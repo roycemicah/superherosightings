@@ -21,6 +21,7 @@ public class Location {
     Double longitude;
     Address address;
     List<HeroVillain> heroVillainsSighted = new ArrayList<>();
+    byte[] image;
 
     public int getLocationID() {
         return locationID;
@@ -76,6 +77,14 @@ public class Location {
 
     public void setHeroVillainsSighted(List<HeroVillain> heroVillainsSighted) {
         this.heroVillainsSighted = heroVillainsSighted;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     @Override

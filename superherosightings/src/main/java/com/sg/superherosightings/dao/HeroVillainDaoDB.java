@@ -49,6 +49,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
     }
 
     // setting object thus void
+    //expose the private methods and make them public for the web app
     private void setHeroVillainSuperpower(HeroVillain heroVillain) {
         String SELECT_HERO_VILLAIN_SUPERPOWER = "SELECT * FROM Superpower WHERE SuperpowerID = ( SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)";
 
@@ -102,7 +103,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
     @Transactional
     public HeroVillain addHeroVillain(HeroVillain heroVillain) {
         String ADD_HEROVILLAIN = "INSERT INTO HeroVillain(`Name`, IsHero, `Description`, SuperpowerID) VALUES(?,?,?,?)";
-        jdbc.update(ADD_HEROVILLAIN, heroVillain.getName(), heroVillain.isIsHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID());
+        jdbc.update(ADD_HEROVILLAIN, heroVillain.getName(), heroVillain.isHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID());
         heroVillain.setHeroVillainID(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
         String ADD_HEROVILLAIN_ORGANIZATION = "INSERT INTO CharacterOrganization(HeroVillainID, OrganizationID) VALUES(?,?)";
 
@@ -119,7 +120,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
         String DELETE_HEROVILLAIN_ORGANIZATIONS = "DELETE FROM CharacterOrganization WHERE HeroVillainID = ?";
         jdbc.update(DELETE_HEROVILLAIN_ORGANIZATIONS, heroVillain.getHeroVillainID());
         String UPDATE_HEROVILLAIN = "UPDATE HeroVillain SET `Name` = ?, IsHero = ?, `Description` = ?, SuperpowerID = ? WHERE HeroVillainID = ?";
-        jdbc.update(UPDATE_HEROVILLAIN, heroVillain.getName(), heroVillain.isIsHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID(), heroVillain.getHeroVillainID());
+        jdbc.update(UPDATE_HEROVILLAIN, heroVillain.getName(), heroVillain.isHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID(), heroVillain.getHeroVillainID());
 
         String ADD_HEROVILLAIN_ORGANIZATION = "INSERT INTO CharacterOrganization(HeroVillainID, OrganizationID) VALUES(?,?)";
 

@@ -50,7 +50,7 @@ public class OrganizationDaoDB implements OrganizationDao {
         Address address = jdbc.queryForObject("SELECT * FROM Address WHERE AddressID = ?", new AddressMapper(), addressID);
         organization.setAddress(address);
     }
-    
+    // this is a list on each Organization object
     private void setAllOrganizationMembers(Organization organization) {
         final String SELECT_ALL_MEMBERS = "SELECT hv.* FROM HeroVillain hv JOIN CharacterOrganization co ON hv.HeroVillainID = co.HeroVillainID JOIN Organization o ON co.OrganizationID = o.OrganizationID WHERE o.OrganizationID = ?";
         List<HeroVillain> heroVillains = jdbc.query(SELECT_ALL_MEMBERS, new HeroVillainMapper(), organization.getOrganizationID());
