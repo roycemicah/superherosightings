@@ -36,6 +36,100 @@
         </div>
 
         <div class="row m-4 border border-dark">
+            <div class="col-3 text-center m-3">
+                <span class="h3">Add Organization</span>
+            </div>
+            <div class="col-7 text-center m-3">
+                <form action="addOrganization" method="POST">
+                    <div class="form-group row">
+                        <label for="name" class="col-3 col-form-label">
+                            Name</label>
+                        <div class="col-9">
+                            <input type="text" name="name" id="name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="description" class="col-3 col-form-label">
+                            Description</label>
+                        <div class="col-9">
+                            <textarea type="text" name="description" id="description" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="streetNumber" class="col-3 col-form-label">
+                            Street Number</label>
+                        <div class="col-9">
+                            <input type="text" name="streetNumber" id="streetNumber" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="streetName" class="col-3 col-form-label">
+                            Street Name</label>
+                        <div class="col-9">
+                            <input type="text" name="streetName" id="streetName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="city" class="col-3 col-form-label">
+                            City</label>
+                        <div class="col-9">
+                            <input type="text" name="city" id="city" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="stateProvince" class="col-3 col-form-label">
+                            State Province</label>
+                        <div class="col-9">
+                            <input type="text" name="stateProvince" id="stateProvince" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="zipPostalCode" class="col-3 col-form-label">
+                            ZIP Postal Code</label>
+                        <div class="col-9">
+                            <input type="text" name="zipPostalCode" id="zipPostalCode" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="country" class="col-3 col-form-label">
+                            Country</label>
+                        <div class="col-9">
+                            <input type="text" name="country" id="country" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="phone" class="col-3 col-form-label">
+                            Phone</label>
+                        <div class="col-9">
+                            <input type="tel" name="phone" id="phone" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="email" class="col-3 col-form-label">
+                            Email</label>
+                        <div class="col-9">
+                            <input type="email" name="email" id="email" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="heroVillains" class="col-3 col-form-label">
+                            Heroes (Villains)</label>
+                        <div class="col-9">
+                            <select multiple id="organizations" name="heroVillainIDs" class="form-control">
+                                <option th:each="heroVillain : ${heroVillains}"
+                                    th:value="${heroVillain.heroVillainID}" th:text="${heroVillain.name}">
+                                    Name</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add Organization</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row m-4 border border-dark">
             <div class="col text-center m-3">
                 <table class="table table-striped">
                     <thead>
@@ -53,7 +147,8 @@
                         <tr th:each="organization: ${organizations}">
                             <td th:text="${organization.organizationID}">Superpower ID</td>
                             <td th:text="${organization.name}">Name</td>
-                            <td th:text="${organization.address.city + ', ' + organization.address.stateProvince}">Address</td>
+                            <td th:text="${organization.address.city + ', ' + organization.address.stateProvince}">
+                                Address</td>
                             <td th:text=" ${organization.phone}">Phone</td>
                             <td th:text=" ${organization.email}">Email</td>
                             <td>Edit</td>
@@ -64,7 +159,7 @@
             </div>
         </div>
 
-        
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

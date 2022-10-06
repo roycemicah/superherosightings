@@ -14,6 +14,7 @@ CREATE TABLE HeroVillain (
     IsHero BOOL NOT NULL,
     `Description` VARCHAR(50),
     SuperpowerID INT,
+    Image MEDIUMBLOB,
     CONSTRAINT fk_HeroVillain_Superpower FOREIGN KEY (SuperpowerID)
         REFERENCES Superpower (SuperpowerID)
 );

@@ -49,7 +49,6 @@ public class HeroVillainDaoDB implements HeroVillainDao {
     }
 
     // setting object thus void
-    //expose the private methods and make them public for the web app
     private void setHeroVillainSuperpower(HeroVillain heroVillain) {
         String SELECT_HERO_VILLAIN_SUPERPOWER = "SELECT * FROM Superpower WHERE SuperpowerID = ( SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)";
 
@@ -102,8 +101,8 @@ public class HeroVillainDaoDB implements HeroVillainDao {
     @Override
     @Transactional
     public HeroVillain addHeroVillain(HeroVillain heroVillain) {
-        String ADD_HEROVILLAIN = "INSERT INTO HeroVillain(`Name`, IsHero, `Description`, SuperpowerID) VALUES(?,?,?,?)";
-        jdbc.update(ADD_HEROVILLAIN, heroVillain.getName(), heroVillain.isHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID());
+        String ADD_HEROVILLAIN = "INSERT INTO HeroVillain(`Name`, IsHero, `Description`, SuperpowerID, Image) VALUES(?,?,?,?,?)";
+        jdbc.update(ADD_HEROVILLAIN, heroVillain.getName(), heroVillain.isHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID(), heroVillain.getImage());
         heroVillain.setHeroVillainID(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
         String ADD_HEROVILLAIN_ORGANIZATION = "INSERT INTO CharacterOrganization(HeroVillainID, OrganizationID) VALUES(?,?)";
 
@@ -149,6 +148,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
             heroVillain.setName(rs.getString("Name"));
             heroVillain.setIsHero(rs.getBoolean("IsHero"));
             heroVillain.setDescription(rs.getString("Description"));
+            heroVillain.setImage(rs.getBytes("Image"));
             return heroVillain;
         }
 

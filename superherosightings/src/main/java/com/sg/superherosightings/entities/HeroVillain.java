@@ -5,6 +5,7 @@
 package com.sg.superherosightings.entities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,8 +20,17 @@ public class HeroVillain {
     boolean isHero;
     String description;
     Superpower superpower;
+    byte[] image;
     List<Location> locations = new ArrayList<>();
     List<Organization> organizations = new ArrayList<>();
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     public int getHeroVillainID() {
         return heroVillainID;
@@ -81,13 +91,14 @@ public class HeroVillain {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + this.heroVillainID;
-        hash = 79 * hash + Objects.hashCode(this.name);
-        hash = 79 * hash + (this.isHero ? 1 : 0);
-        hash = 79 * hash + Objects.hashCode(this.description);
-        hash = 79 * hash + Objects.hashCode(this.superpower);
-        hash = 79 * hash + Objects.hashCode(this.locations);
-        hash = 79 * hash + Objects.hashCode(this.organizations);
+        hash = 29 * hash + this.heroVillainID;
+        hash = 29 * hash + Objects.hashCode(this.name);
+        hash = 29 * hash + (this.isHero ? 1 : 0);
+        hash = 29 * hash + Objects.hashCode(this.description);
+        hash = 29 * hash + Objects.hashCode(this.superpower);
+        hash = 29 * hash + Arrays.hashCode(this.image);
+        hash = 29 * hash + Objects.hashCode(this.locations);
+        hash = 29 * hash + Objects.hashCode(this.organizations);
         return hash;
     }
 
@@ -118,10 +129,14 @@ public class HeroVillain {
         if (!Objects.equals(this.superpower, other.superpower)) {
             return false;
         }
+        if (!Arrays.equals(this.image, other.image)) {
+            return false;
+        }
         if (!Objects.equals(this.locations, other.locations)) {
             return false;
         }
         return Objects.equals(this.organizations, other.organizations);
     }
-   
+
+    
 }

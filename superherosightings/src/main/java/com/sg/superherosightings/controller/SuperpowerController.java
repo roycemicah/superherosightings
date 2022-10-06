@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  *
@@ -18,14 +19,42 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class SuperpowerController {
+
     @Autowired
     SuperheroSightingsServiceLayer service;
     
-    @GetMapping("superpowers") 
+    @GetMapping("superpowers")    
     public String displaySuperpowers(Model model) {
         List<Superpower> superpowers = service.getAllSuperpowers();
         model.addAttribute("superpowers", superpowers);
         return "superpowers";
     }
-
+    
+    @PostMapping("addSuperpower")
+    public String addSuperpower(Superpower superpower, Model model) {
+        model.addAttribute("superpowers", superpower);
+        service.addSuperpower(superpower);
+        return "redirect:/superpowers";
+    }
+    
+    @GetMapping("editSuperpower")
+    public String editSuperpower(Integer id, Model model) {
+        Superpower superpower = service.getSuperpowerByID(id);
+        model.addAttribute("superpowers", superpower);
+        return "editSuperpower";
+    }
+    
+    @PostMapping("editSuperpower")
+    public String updateSuperpower(Superpower superpower, Model model) {
+        model.addAttribute("superpower", superpower);
+        service.updateSuperpower(superpower);
+        return "redirect:/superpowers";
+    }
+    
+    @GetMapping("deleteSuperpower")
+    public String deleteSuperpower(Superpower superpower) {
+        service.deleteSuperpowerByID(superpower.getSuperpowerID());
+        return "redirect:/superpowers";
+    }
+    
 }
