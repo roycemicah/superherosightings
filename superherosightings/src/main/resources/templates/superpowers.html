@@ -71,6 +71,7 @@
                             <th>Superpower ID</th>
                             <th>Name</th>
                             <th>Description</th>
+                            <th>Details</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
@@ -80,6 +81,7 @@
                             <td th:text="${superpower.superpowerID}">Superpower ID</td>
                             <td th:text="${superpower.name}">Name</td>
                             <td th:text="${superpower.description}">Description</td>
+                            <td><a href="#" th:href="@{/superpower(superpowerID=${superpower.superpowerID})}">Details</a></td>
                             <td><a href="#" th:href="@{/editSuperpower(superpowerID=${superpower.superpowerID})}">Edit</a></td>
                             <td><a href="#" th:href="@{/deleteSuperpower(superpowerID=${superpower.superpowerID})}">Delete</a></td>
                         </tr>

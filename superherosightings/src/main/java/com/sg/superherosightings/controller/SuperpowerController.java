@@ -7,6 +7,7 @@ package com.sg.superherosightings.controller;
 import com.sg.superherosightings.entities.Superpower;
 import com.sg.superherosightings.service.SuperheroSightingsServiceLayer;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,23 +39,23 @@ public class SuperpowerController {
     }
     
     @GetMapping("editSuperpower")
-    public String editSuperpower(Integer id, Model model) {
-        Superpower superpower = service.getSuperpowerByID(id);
-        model.addAttribute("superpowers", superpower);
+    public String editSuperpower(Integer superpowerID, Model model) {
+        Superpower superpower = service.getSuperpowerByID(superpowerID);
+        model.addAttribute("superpower", superpower);
         return "editSuperpower";
     }
     
     @PostMapping("editSuperpower")
-    public String updateSuperpower(Superpower superpower, Model model) {
-        model.addAttribute("superpower", superpower);
+    public String updateSuperpower(Superpower superpower) {
+        
         service.updateSuperpower(superpower);
         return "redirect:/superpowers";
     }
     
-    @GetMapping("deleteSuperpower")
-    public String deleteSuperpower(Superpower superpower) {
-        service.deleteSuperpowerByID(superpower.getSuperpowerID());
-        return "redirect:/superpowers";
-    }
+//    @GetMapping("deleteSuperpower")
+//    public String deleteSuperpower(Superpower superpower) {
+//        service.deleteSuperpowerByID(superpower.getSuperpowerID());
+//        return "redirect:/superpowers";
+//    }
     
 }

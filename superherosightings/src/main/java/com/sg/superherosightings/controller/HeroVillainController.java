@@ -5,7 +5,6 @@
 package com.sg.superherosightings.controller;
 
 import com.sg.superherosightings.entities.HeroVillain;
-import com.sg.superherosightings.entities.Location;
 import com.sg.superherosightings.entities.Organization;
 import com.sg.superherosightings.entities.Superpower;
 import com.sg.superherosightings.service.SuperheroSightingsServiceLayer;
@@ -75,6 +74,23 @@ public class HeroVillainController {
 
         service.addHeroVillain(heroVillain);
         return "redirect:/heroVillains";
+    }
+    
+    @GetMapping("editHeroVillain")
+    public String editHeroVillain(Integer heroVillainID, Model model) {
+        HeroVillain heroVillain = service.getHeroVillainByID(heroVillainID);
+        List<Organization> organizations = service.getAllOrganizations();
+        List<Superpower> superpowers = service.getAllSuperpowers();
+        
+        // empties members' value in the organization list
+        for(Organization organization : organizations) {
+            organization.setMembers(new ArrayList<>());
+        }
+        
+        model.addAttribute("heroVillain", heroVillain);
+        model.addAttribute("organizations", organizations);
+        model.addAttribute("superpowers", superpowers);
+        return "editHeroVillain";
     }
 
     @GetMapping("heroVillainImage/{heroVillainID}")
