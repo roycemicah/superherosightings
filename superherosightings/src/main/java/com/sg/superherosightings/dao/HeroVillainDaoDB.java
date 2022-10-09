@@ -81,7 +81,7 @@ public class HeroVillainDaoDB implements HeroVillainDao {
             Address address = jdbc.queryForObject("SELECT * FROM Address WHERE AddressID = (SELECT AddressID FROM Location WHERE LocationID = ?)", new AddressMapper(), location.getLocationID());
             location.setAddress(address);
         }
-        
+
         heroVillain.setLocations(heroVillainLocations);
     }
 
@@ -118,14 +118,21 @@ public class HeroVillainDaoDB implements HeroVillainDao {
     public void updateHeroVillain(HeroVillain heroVillain) {
         String DELETE_HEROVILLAIN_ORGANIZATIONS = "DELETE FROM CharacterOrganization WHERE HeroVillainID = ?";
         jdbc.update(DELETE_HEROVILLAIN_ORGANIZATIONS, heroVillain.getHeroVillainID());
-        String UPDATE_HEROVILLAIN = "UPDATE HeroVillain SET `Name` = ?, IsHero = ?, `Description` = ?, SuperpowerID = ? WHERE HeroVillainID = ?";
-        jdbc.update(UPDATE_HEROVILLAIN, heroVillain.getName(), heroVillain.isHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID(), heroVillain.getHeroVillainID());
-
+        String UPDATE_HEROVILLAIN = "UPDATE HeroVillain SET `Name` = ?, IsHero = ?, `Description` = ?, SuperpowerID = ?, Image = ? WHERE HeroVillainID = ?";
+        String UPDATE_HEROVILLAIN_NO_IMAGE = "UPDATE HeroVillain SET `Name` = ?, IsHero = ?, `Description` = ?, SuperpowerID = ? WHERE HeroVillainID = ?";
+        
         String ADD_HEROVILLAIN_ORGANIZATION = "INSERT INTO CharacterOrganization(HeroVillainID, OrganizationID) VALUES(?,?)";
-
+        
         for (Organization organization : heroVillain.getOrganizations()) {
             jdbc.update(ADD_HEROVILLAIN_ORGANIZATION, heroVillain.getHeroVillainID(), organization.getOrganizationID());
         }
+        
+        if (heroVillain.getImage().length == 0) {
+            jdbc.update(UPDATE_HEROVILLAIN_NO_IMAGE, heroVillain.getName(), heroVillain.isHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID(), heroVillain.getHeroVillainID());
+        } else {
+            jdbc.update(UPDATE_HEROVILLAIN, heroVillain.getName(), heroVillain.isHero(), heroVillain.getDescription(), heroVillain.getSuperpower().getSuperpowerID(), heroVillain.getImage(), heroVillain.getHeroVillainID());
+        }
+ 
     }
 
     @Override

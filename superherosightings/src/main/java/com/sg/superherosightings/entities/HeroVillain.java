@@ -20,7 +20,7 @@ public class HeroVillain {
     boolean isHero;
     String description;
     Superpower superpower;
-    byte[] image;
+    byte[] image = new byte[0];
     List<Location> locations = new ArrayList<>();
     List<Organization> organizations = new ArrayList<>();
 

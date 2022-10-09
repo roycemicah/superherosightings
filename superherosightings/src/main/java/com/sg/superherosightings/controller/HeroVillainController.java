@@ -75,22 +75,50 @@ public class HeroVillainController {
         service.addHeroVillain(heroVillain);
         return "redirect:/heroVillains";
     }
-    
+
     @GetMapping("editHeroVillain")
     public String editHeroVillain(Integer heroVillainID, Model model) {
         HeroVillain heroVillain = service.getHeroVillainByID(heroVillainID);
         List<Organization> organizations = service.getAllOrganizations();
         List<Superpower> superpowers = service.getAllSuperpowers();
-        
+
         // empties members' value in the organization list
-        for(Organization organization : organizations) {
+        for (Organization organization : organizations) {
             organization.setMembers(new ArrayList<>());
         }
-        
+
         model.addAttribute("heroVillain", heroVillain);
         model.addAttribute("organizations", organizations);
         model.addAttribute("superpowers", superpowers);
         return "editHeroVillain";
+    }
+
+    @PostMapping("editHeroVillain")
+    public String updateHeroVillain(HeroVillain heroVillain, HttpServletRequest request, @RequestParam("file") MultipartFile image) {
+        List<Organization> organizations = new ArrayList<>();
+        String[] organizationIDs = request.getParameterValues("organizationIDs");
+        String superpowerID = request.getParameter("superpowerID");
+        heroVillain.setSuperpower(service.getSuperpowerByID(Integer.parseInt(superpowerID)));
+
+        if (organizationIDs != null) {
+            for (String organizationID : organizationIDs) {
+                int id = Integer.parseInt(organizationID);
+                Organization organization = service.getOrganizationByID(id);
+                organizations.add(organization);
+            }
+        }
+
+        heroVillain.setOrganizations(organizations);
+
+        try {            
+            byte[] imageBytes = image.getBytes();
+            heroVillain.setImage(imageBytes);
+        } catch (IOException ex) {
+
+        }
+        
+        service.updateHeroVillain(heroVillain);
+        return "redirect:/heroVillains";
     }
 
     @GetMapping("heroVillainImage/{heroVillainID}")
