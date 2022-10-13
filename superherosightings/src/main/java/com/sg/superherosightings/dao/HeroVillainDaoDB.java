@@ -145,6 +145,19 @@ public class HeroVillainDaoDB implements HeroVillainDao {
         String DELETE_HEROVILLAIN = "DELETE FROM HeroVillain WHERE HeroVillainID = ?";
         jdbc.update(DELETE_HEROVILLAIN, heroVillainID);
     }
+    
+    @Override
+    public List<HeroVillain> getHeroVillainsBySuperpowerID(int superpowerID) {
+        String SELECT_HEROES = "SELECT * FROM HeroVillain WHERE SuperpowerID = ?";
+        List<HeroVillain> heroes = jdbc.query(SELECT_HEROES, new HeroVillainMapper(), superpowerID);
+
+        for (HeroVillain hero : heroes) {
+            setHeroVillainSuperpower(hero);
+            setHeroVillainOrganizations(hero);
+            setLocationsForHeroVillain(hero);
+        }
+        return heroes;
+    }
 
     public static final class HeroVillainMapper implements RowMapper<HeroVillain> {
 

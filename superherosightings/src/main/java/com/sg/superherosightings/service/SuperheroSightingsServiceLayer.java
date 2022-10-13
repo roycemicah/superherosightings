@@ -28,6 +28,7 @@ public interface SuperheroSightingsServiceLayer {
     public HeroVillain addHeroVillain(HeroVillain heroVillain);
     public void updateHeroVillain(HeroVillain heroVillain);
     public void deleteHeroVillainByID(int heroVillainID);
+    public List<HeroVillain> getHeroVillainsBySuperpowerID(int superpowerID);
     
     public Organization getOrganizationByID(int organizationID);
     public List<Organization> getAllOrganizations();

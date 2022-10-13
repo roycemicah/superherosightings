@@ -85,7 +85,7 @@
                     </div>
                     <div class="form-group row">
                         <label for="zipPostalCode" class="col-3 col-form-label">
-                            ZIP Postal Code</label>
+                            ZIP (Postal Code)</label>
                         <div class="col-9">
                             <input type="text" name="zipPostalCode" id="zipPostalCode" class="form-control" />
                         </div>
@@ -116,7 +116,7 @@
                         <label for="heroVillains" class="col-3 col-form-label">
                             Heroes (Villains)</label>
                         <div class="col-9">
-                            <select multiple id="organizations" name="heroVillainIDs" class="form-control">
+                            <select multiple id="heroVillains" name="heroVillainIDs" class="form-control">
                                 <option th:each="heroVillain : ${heroVillains}"
                                     th:value="${heroVillain.heroVillainID}" th:text="${heroVillain.name}">
                                     Name</option>
@@ -139,6 +139,7 @@
                             <th>Location</th>
                             <th>Phone</th>
                             <th>Email</th>
+                            <th>Details</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
@@ -151,8 +152,9 @@
                                 Address</td>
                             <td th:text=" ${organization.phone}">Phone</td>
                             <td th:text=" ${organization.email}">Email</td>
-                            <td>Edit</td>
-                            <td>Delete</td>
+                            <td><a href="#" th:href="@{/organizationDetail(organizationID=${organization.organizationID})}">Details</a></td>
+                            <td><a href="#" th:href="@{/editOrganization(organizationID=${organization.organizationID})}">Edit</a></td>
+                            <td><a href="#" th:href="@{/deleteOrganization(organizationID=${organization.organizationID})}">Delete</a></td>
                         </tr>
                     </tbody>
                 </table>

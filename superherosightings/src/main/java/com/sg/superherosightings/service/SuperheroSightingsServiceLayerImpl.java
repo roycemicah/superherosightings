@@ -92,7 +92,7 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
     public void deleteHeroVillainByID(int heroVillainID) {
         heroVillainDao.deleteHeroVillainByID(heroVillainID);
     }
-    
+
     @Override
     public Organization getOrganizationByID(int organizationID) {
         return organizationDao.getOrganizationByID(organizationID);
@@ -179,12 +179,18 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
     
     @Override
     public void updateLocation(Location location) {
+        location.setImage(getLocationImageFromGoogle(location));
         locationDao.updateLocation(location);
     }
     
     @Override
     public void deleteLocationByID(int locationID) {
         locationDao.deleteLocationByID(locationID);
+    }
+
+    @Override
+    public List<HeroVillain> getHeroVillainsBySuperpowerID(int superpowerID) {
+        return heroVillainDao.getHeroVillainsBySuperpowerID(superpowerID);
     }
     
 }

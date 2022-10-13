@@ -36,7 +36,7 @@ public class SightingDaoDB implements SightingDao {
     @Override
     public Sighting getSightingByID(int sightingID) {
         String SELECT_SIGHTING_BY_ID = "SELECT SightingID, `Date` FROM Sighting WHERE SightingID = ?";
-        
+
         try {
             Sighting sighting = jdbc.queryForObject(SELECT_SIGHTING_BY_ID, new SightingMapper(), sightingID);
             setHeroSighted(sighting);
@@ -50,8 +50,14 @@ public class SightingDaoDB implements SightingDao {
     private void setHeroSighted(Sighting sighting) {
         String SELECT_SIGHTING_HERO = "SELECT * FROM HeroVillain WHERE HeroVillainID = (SELECT HeroVillainID FROM Sighting WHERE SightingID = ?)";
         HeroVillain hero = jdbc.queryForObject(SELECT_SIGHTING_HERO, new HeroVillainMapper(), sighting.getSightingID());
-        Superpower superpower = jdbc.queryForObject("SELECT * FROM Superpower WHERE SuperpowerID = (SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)", new SuperpowerMapper(), hero.getHeroVillainID());
-        hero.setSuperpower(superpower);
+
+        try {
+            Superpower superpower = jdbc.queryForObject("SELECT * FROM Superpower WHERE SuperpowerID = (SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)", new SuperpowerMapper(), hero.getHeroVillainID());
+            hero.setSuperpower(superpower);
+        } catch (DataAccessException ex) {
+
+        }
+
         sighting.setHeroVillain(hero);
     }
 
@@ -73,7 +79,7 @@ public class SightingDaoDB implements SightingDao {
             setHeroSighted(sighting);
             setSightingLocation(sighting);
         }
-        
+
         return sightings;
     }
 
@@ -108,7 +114,7 @@ public class SightingDaoDB implements SightingDao {
             setHeroSighted(sighting);
             setSightingLocation(sighting);
         }
-        
+
         return sightings;
     }
 

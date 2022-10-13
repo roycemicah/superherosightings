@@ -37,16 +37,16 @@
 
         <div class="row m-4 border border-dark">
             <div class="col-3 text-center m-3">
-                <span class="h3">Add Location</span>
+                <span class="h3">Edit Location</span>
             </div>
             <div class="col-7 text-center m-3">
-                <form action="addLocation" method="POST">
+                <form action="editLocation" method="POST">
                     <div class="form-group row">
                         <label for="name" class="col-3 col-form-label">
                             Name</label>
                         <div class="col-9">
                             <input type="text" name="name" 
-                                   id="name" class="form-control"/>
+                                   id="name" class="form-control" th:value="${location.name}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -54,7 +54,7 @@
                             Description</label>
                         <div class="col-9">
                             <textarea type="text" name="description" 
-                                   id="description" class="form-control"></textarea>
+                                   id="description" class="form-control" th:text="${location.description}"></textarea>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -62,7 +62,7 @@
                             Latitude</label>
                         <div class="col-9">
                             <input type="text" name="latitude" 
-                                   id="latitude" class="form-control"/>
+                                   id="latitude" class="form-control" th:value="${location.latitude}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -70,7 +70,7 @@
                             Longitude</label>
                         <div class="col-9">
                             <input type="text" name="longitude" 
-                                   id="longitude" class="form-control"/>
+                                   id="longitude" class="form-control" th:value="${location.longitude}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -78,7 +78,7 @@
                             Street Number</label>
                         <div class="col-9">
                             <input type="text" name="streetNumber" 
-                                   id="streetNumber" class="form-control"/>
+                                   id="streetNumber" class="form-control" th:value="${location.address.streetNumber}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -86,7 +86,7 @@
                             Street Name</label>
                         <div class="col-9">
                             <input type="text" name="streetName" 
-                                   id="streetName" class="form-control"/>
+                                   id="streetName" class="form-control" th:value="${location.address.streetName}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -94,7 +94,7 @@
                             City</label>
                         <div class="col-9">
                             <input type="text" name="city" 
-                                   id="city" class="form-control"/>
+                                   id="city" class="form-control" th:value="${location.address.city}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -102,7 +102,7 @@
                             State Province</label>
                         <div class="col-9">
                             <input type="text" name="stateProvince" 
-                                   id="stateProvince" class="form-control"/>
+                                   id="stateProvince" class="form-control" th:value="${location.address.stateProvince}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -110,7 +110,7 @@
                             ZIP Postal Code</label>
                         <div class="col-9">
                             <input type="text" name="zipPostalCode" 
-                                   id="zipPostalCode" class="form-control"/>
+                                   id="zipPostalCode" class="form-control" th:value="${location.address.zipPostalCode}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -118,46 +118,15 @@
                             Country</label>
                         <div class="col-9">
                             <input type="text" name="country" 
-                                   id="country" class="form-control"/>
+                                   id="country" class="form-control" th:value="${location.address.country}"/>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Add Location</button>
+                    <input type="hidden" name="locationID" th:value="${location.locationID}"/>
+                    <button type="submit" class="btn btn-primary">Edit Location</button>
                 </form>
             </div>
         </div>
 
-        <div class="row m-4 border border-dark">
-            <div class="col text-center m-3">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Location ID</th>
-                            <th>Name</th>
-                            <th>Latitude</th>
-                            <th>Longitude</th>
-                            <th>Address</th>
-                            <th>Detail</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="location: ${locations}">
-                            <td th:text="${location.locationID}">Superpower ID</td>
-                            <td th:text="${location.name}">Name</td>
-                            <td th:text="${location.latitude}">Latitude</td>
-                            <td th:text="${location.longitude}">Longitude</td>
-                            <td th:text="${location.address.city + ', ' + location.address.stateProvince}">Address</td>
-                            <td><a href="#" th:href="@{/locationDetail(locationID=${location.locationID})}">Details</a></td>
-                            <td><a href="#" th:href="@{/editLocation(locationID=${location.locationID})}">Edit</a></td>
-                            <td><a href="#" th:href="@{/deleteLocation(locationID=${location.locationID})}">Delete</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

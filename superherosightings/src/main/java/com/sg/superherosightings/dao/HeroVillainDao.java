@@ -18,5 +18,6 @@ public interface HeroVillainDao {
     public HeroVillain addHeroVillain(HeroVillain heroVillain);
     public void updateHeroVillain(HeroVillain heroVillain);
     public void deleteHeroVillainByID(int heroVillainID);
+    public List<HeroVillain> getHeroVillainsBySuperpowerID(int superpowerID);
 
 }

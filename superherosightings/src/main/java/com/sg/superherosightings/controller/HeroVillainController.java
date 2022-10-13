@@ -120,6 +120,13 @@ public class HeroVillainController {
         service.updateHeroVillain(heroVillain);
         return "redirect:/heroVillains";
     }
+    
+    @GetMapping("heroVillainDetail")
+    public String heroVillainDetail(Integer heroVillainID, Model model) {
+        HeroVillain heroVillain = service.getHeroVillainByID(heroVillainID);
+        model.addAttribute("heroVillain", heroVillain);
+        return "heroVillainDetail";
+    }
 
     @GetMapping("heroVillainImage/{heroVillainID}")
     public void displayHeroVillainImage(HttpServletResponse response, @PathVariable Integer heroVillainID) throws IOException {
@@ -128,8 +135,15 @@ public class HeroVillainController {
     }
 
     @GetMapping("deleteHeroVillain")
-    public String deleteHeroVillain(HeroVillain heroVillain) {
-        service.deleteHeroVillainByID(heroVillain.getHeroVillainID());
+    public String deleteHeroVillain(Integer heroVillainID, Model model) {
+        HeroVillain heroVillain = service.getHeroVillainByID(heroVillainID);
+        model.addAttribute("heroVillain", heroVillain);
+        return "deleteHeroVillain";
+    }
+    
+    @PostMapping("deleteHeroVillain")
+    public String confirmDeleteHeroVillain(Integer heroVillainID) {
+        service.deleteHeroVillainByID(heroVillainID);
         return "redirect:/heroVillains";
     }
 }

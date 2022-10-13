@@ -4,10 +4,10 @@
  */
 package com.sg.superherosightings.controller;
 
+import com.sg.superherosightings.entities.HeroVillain;
 import com.sg.superherosightings.entities.Superpower;
 import com.sg.superherosightings.service.SuperheroSightingsServiceLayer;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,10 +52,26 @@ public class SuperpowerController {
         return "redirect:/superpowers";
     }
     
-//    @GetMapping("deleteSuperpower")
-//    public String deleteSuperpower(Superpower superpower) {
-//        service.deleteSuperpowerByID(superpower.getSuperpowerID());
-//        return "redirect:/superpowers";
-//    }
+    @GetMapping("superpowerDetail")
+    public String superpowerDetail(Integer superpowerID, Model model){
+        Superpower superpower = service.getSuperpowerByID(superpowerID);
+        List<HeroVillain> heroVillains = service.getHeroVillainsBySuperpowerID(superpowerID);
+        model.addAttribute("superpower", superpower);
+        model.addAttribute("heroVillains", heroVillains);
+        return "superpowerDetail";
+    }
+    
+    @GetMapping("deleteSuperpower")
+    public String deleteSuperpower(Integer superpowerID, Model model) {
+        Superpower superpower = service.getSuperpowerByID(superpowerID);
+        model.addAttribute("superpower", superpower);
+        return "deleteSuperpower";
+    }
+    
+    @PostMapping("deleteSuperpower")
+    public String confirmDeleteSuperpower(Integer superpowerID) {
+        service.deleteSuperpowerByID(superpowerID);
+        return "redirect:/superpowers";
+    }
     
 }

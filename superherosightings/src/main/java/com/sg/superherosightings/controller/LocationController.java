@@ -9,6 +9,7 @@ import com.sg.superherosightings.entities.Location;
 import com.sg.superherosightings.service.SuperheroSightingsServiceLayer;
 import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,29 @@ public class LocationController {
         location.setAddress(address);
         service.addLocation(location);
         return "redirect:/locations";
+    }
+    
+    @GetMapping("editLocation")
+    public String editLocation(HttpServletRequest request, Model model) {
+        String locationID = request.getParameter("locationID");
+        int id = Integer.parseInt(locationID);
+        Location location = service.getLocationByID(id);
+        model.addAttribute("location", location);
+        return "editLocation";
+    }
+    
+    @PostMapping("editLocation")
+    public String updateLocation(Location location, Address address){
+        location.setAddress(address);
+        service.updateLocation(location);
+        return "redirect:/locations";
+    }
+    
+    @GetMapping("locationDetail")
+    public String locationDetail(Integer locationID, Model model) {
+        Location location = service.getLocationByID(locationID);
+        model.addAttribute("location", location);
+        return "locationDetail";
     }
     
     @GetMapping("locationImage/{locationID}")

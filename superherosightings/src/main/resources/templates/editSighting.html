@@ -37,60 +37,46 @@
 
         <div class="row m-4 border border-dark">
             <div class="col-3 text-center m-3">
-                <span class="h3">Add Superpower</span>
+                <span class="h3">Edit Sighting</span>
             </div>
             <div class="col-7 text-center m-3">
-                <form action="addSuperpower" method="POST">
+                <form action="editSighting" method="POST">
                     <div class="form-group row">
-                        <label for="name" class="col-3 col-form-label">
-                            Name</label>
+                        <label for="location" class="col-3 col-form-label">
+                            Location</label>
                         <div class="col-9">
-                            <input type="text" name="name" 
-                                   id="name" class="form-control"/>
+                            <select id="location" name="locationID" class="form-control">
+                                <option th:each="location : ${locations}" th:value="${location.locationID}"
+                                    th:text="${location.name}" th:selected="${sighting.location.equals(location)}">
+                                    Location Name</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="description" class="col-3 col-form-label">
-                            Description</label>
+                        <label for="heroVillain" class="col-3 col-form-label">
+                            Hero (Villain)</label>
+                            <div class="col-9">
+                                <select id="heroVillain" name="heroVillainID" class="form-control">
+                                    <option th:each="heroVillain : ${heroVillains}" th:value="${heroVillain.heroVillainID}"
+                                        th:text="${heroVillain.name}" th:selected="${sighting.heroVillain.equals(heroVillain)}">
+                                        Hero (Villain) Name</option>
+                                </select>
+                            </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="date" class="col-3 col-form-label">
+                            Date</label>
                         <div class="col-9">
-                            <textarea type="text" name="description" 
-                                   id="description" class="form-control"></textarea>
+                            <input type="date" name="dateString" 
+                                   id="date" class="form-control" th:value="${sighting.getDate}"/>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Add Superpower</button>
+                    <input type="hidden" name="sightingID" th:value="${sighting.sightingID}"/>
+                    <button type="submit" class="btn btn-primary">Edit Sighting</button>
                 </form>
             </div>
         </div>
 
-        <div class="row m-4 border border-dark">
-            <div class="col text-center m-3">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Superpower ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Details</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="superpower: ${superpowers}">
-                            <td th:text="${superpower.superpowerID}">Superpower ID</td>
-                            <td th:text="${superpower.name}">Name</td>
-                            <td th:text="${superpower.description}">Description</td>
-                            <td><a href="#" th:href="@{/superpowerDetail(superpowerID=${superpower.superpowerID})}">Details</a></td>
-                            <td><a href="#" th:href="@{/editSuperpower(superpowerID=${superpower.superpowerID})}">Edit</a></td>
-                            <td><a href="#" th:href="@{/deleteSuperpower(superpowerID=${superpower.superpowerID})}">Delete</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

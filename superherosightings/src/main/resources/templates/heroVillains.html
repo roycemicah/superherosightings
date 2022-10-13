@@ -51,15 +51,11 @@
 
                     <div class="form-group row">
                         <label for="isHero" class="col-3 col-form-label">
-                            Is Hero</label>
+                            Is Hero?</label>
                         <div class="col-9">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="isHero" value="true">
-                                <label class="form-check-label" for="inlineCheckbox1">Yes</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="isHero" value="false">
-                                <label class="form-check-label" for="inlineCheckbox2">No</label>
+                                <label class="form-check-label" for="inlineCheckbox1">&nbsp;&nbsp;Yes, a Hero!</label>
                             </div>
                         </div>
                     </div>
@@ -114,6 +110,7 @@
                             <th>Name</th>
                             <th>Is Hero</th>
                             <th>Superpower</th>
+                            <th>Details</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
@@ -123,7 +120,8 @@
                             <td th:text="${heroVillain.heroVillainID}">Hero (Villain) ID</td>
                             <td th:text="${heroVillain.name}">Name</td>
                             <td th:text="${heroVillain.isHero}">Is Hero</td>
-                            <td th:text="${heroVillain.superpower.name}">Superpower</td>
+                            <td th:text="${heroVillain.superpower != null} ? ${heroVillain.superpower.name} : 'none'">Superpower</td>
+                            <td><a href="#" th:href="@{/heroVillainDetail(heroVillainID=${heroVillain.heroVillainID})}">Details</a></td>
                             <td><a href="#" th:href="@{editHeroVillain(heroVillainID=${heroVillain.heroVillainID})}">Edit</a></td>
                             <td><a href="#" th:href="@{deleteHeroVillain(heroVillainID=${heroVillain.heroVillainID})}">Delete</a></td>
                         </tr>

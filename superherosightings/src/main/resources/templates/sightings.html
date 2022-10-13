@@ -86,6 +86,7 @@
                             <th>Location</th>
                             <th>Hero Villain</th>
                             <th>Date</th>
+                            <th>Details</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
@@ -96,7 +97,8 @@
                             <td th:text="${sighting.location.name}">Location</td>
                             <td th:text="${sighting.heroVillain.name}">Hero Villain</td>
                             <td th:text="${sighting.date}">Date</td>
-                            <td>Edit</td>
+                            <td><a href="#" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}">Details</a></td>
+                            <td><a href="#" th:href="@{/editSighting(sightingID=${sighting.sightingID})}">Edit</a></td>
                             <td>Delete</td>
                         </tr>
                     </tbody>

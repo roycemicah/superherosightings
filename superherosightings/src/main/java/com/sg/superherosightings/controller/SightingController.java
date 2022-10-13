@@ -9,6 +9,7 @@ import com.sg.superherosightings.entities.Location;
 import com.sg.superherosightings.entities.Sighting;
 import com.sg.superherosightings.service.SuperheroSightingsServiceLayer;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,36 @@ public class SightingController {
         
         service.addSighting(sighting);
         return "redirect:/sightings";
+    }
+    
+    @GetMapping("editSighting")
+    public String editSighting(HttpServletRequest request, Model model){
+        String sightingID = request.getParameter("sightingID");
+        Sighting sighting = service.getSightingByID(Integer.parseInt(sightingID));
+        List<Location> locations = service.getAllLocations();
+        
+        for(Location location : locations) {
+            location.setHeroVillainsSighted(new ArrayList<>());
+        }
+        
+        List<HeroVillain> heroVillains = service.getAllHeroVillains();
+        
+        for(HeroVillain heroVillain : heroVillains) {
+            heroVillain.setOrganizations(new ArrayList<>());
+            heroVillain.setLocations(new ArrayList<>());
+        }
+        
+        model.addAttribute("sighting", sighting);
+        model.addAttribute("locations", locations);
+        model.addAttribute("heroVillains", heroVillains);
+        
+        return "editSighting";
+    }
+    
+    @GetMapping("sightingDetail")
+    public String sightingDetail(Integer sightingID, Model model) {
+        Sighting sighting = service.getSightingByID(sightingID);
+        model.addAttribute("sighting", sighting);
+        return "sightingDetail";
     }
 }

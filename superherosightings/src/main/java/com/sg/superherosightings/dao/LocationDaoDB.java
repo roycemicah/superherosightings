@@ -50,14 +50,19 @@ public class LocationDaoDB implements LocationDao {
         Address address = jdbc.queryForObject(SELECT_ADDRESS_FOR_LOCATION, new AddressMapper(), location.getLocationID());
         location.setAddress(address);
     }
+
     // List on each location object
     private void setHeroesSighted(Location location) {
         String SELECT_HEROES_SIGHTED = "SELECT hv.* FROM HeroVillain hv JOIN Sighting s ON hv.HeroVillainID = s.HeroVillainID JOIN Location l ON s.LocationID = l.locationID WHERE l.LocationID = ? GROUP BY hv.HeroVillainID";
         List<HeroVillain> heroVillains = jdbc.query(SELECT_HEROES_SIGHTED, new HeroVillainMapper(), location.getLocationID());
 
         for (HeroVillain heroVillain : heroVillains) {
-            Superpower superpower = jdbc.queryForObject("SELECT * FROM Superpower WHERE SuperpowerID = (SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)", new SuperpowerMapper(), heroVillain.getHeroVillainID());
-            heroVillain.setSuperpower(superpower);
+            try {
+                Superpower superpower = jdbc.queryForObject("SELECT * FROM Superpower WHERE SuperpowerID = (SELECT SuperpowerID FROM HeroVillain WHERE HeroVillainID = ?)", new SuperpowerMapper(), heroVillain.getHeroVillainID());
+                heroVillain.setSuperpower(superpower);
+            } catch (DataAccessException ex) {
+
+            }
         }
 
         location.setHeroVillainsSighted(heroVillains);
@@ -98,8 +103,8 @@ public class LocationDaoDB implements LocationDao {
         String UPDATE_ADDRESS = "UPDATE Address SET StreetNumber = ?, StreetName = ?, City = ?, StateProvince = ?, ZipPostalCode = ?, Country = ? WHERE AddressID = ?";
         jdbc.update(UPDATE_ADDRESS, location.getAddress().getStreetNumber(), location.getAddress().getStreetName(), location.getAddress().getCity(), location.getAddress().getStateProvince(),
                 location.getAddress().getZipPostalCode(), location.getAddress().getCountry(), addressID);
-        String UPDATE_LOCATION = "UPDATE Location SET `Name` = ?, `Description` = ?, Latitude = ?, Longitude = ? WHERE LocationID = ?";
-        jdbc.update(UPDATE_LOCATION, location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude(), location.getLocationID());
+        String UPDATE_LOCATION = "UPDATE Location SET `Name` = ?, `Description` = ?, Latitude = ?, Longitude = ?, Image = ? WHERE LocationID = ?";
+        jdbc.update(UPDATE_LOCATION, location.getName(), location.getDescription(), location.getLatitude(), location.getLongitude(), location.getImage(), location.getLocationID());
     }
 
     @Override
