@@ -7,6 +7,11 @@ package com.sg.superherosightings.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -15,10 +20,25 @@ import java.util.Objects;
 public class Location {
     
     int locationID;
+    
+    @NotBlank(message = "Name must not be empty.")
+    @Size(max = 30, message = "Name must be less than 30 characters.")
     String name;
+    
+    @NotBlank(message = "Description must not be empty.")
+    @Size(max = 100, message = "Description must be less than 100 characters.")
     String description;
+    
+    @NotNull(message = "Latitude must not be empty.")
+    @Min(value = -90, message = "Latitude must be greater than or equal to -90.")
+    @Max(value = 90, message = "Latitude must be less than or equal to 90.")
     Double latitude;
+    
+    @NotNull(message = "Longitude must not be empty.")
+    @Min(value = -180, message = "Longitude must be greater than or equal to -180.")
+    @Max(value = 180, message = "Longitude must be less than or equal to 180.")
     Double longitude;
+    
     Address address;
     List<HeroVillain> heroVillainsSighted = new ArrayList<>();
     byte[] image;

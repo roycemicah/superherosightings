@@ -5,6 +5,8 @@
 package com.sg.superherosightings.entities;
 
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -13,7 +15,13 @@ import java.util.Objects;
 public class Superpower {
     
     int superpowerID;
+    
+    @NotBlank(message = "Name must not be empty.")
+    @Size(max = 20, message = "Name must be less than 20 characters.")
     String name;
+    
+    @NotBlank(message = "Description must not be empty.")
+    @Size(max = 100, message = "Description must be less than 100 characters.")
     String description;
 
     public int getSuperpowerID() {

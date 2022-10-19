@@ -10,8 +10,13 @@ import com.sg.superherosightings.entities.Organization;
 import com.sg.superherosightings.entities.Superpower;
 import com.sg.superherosightings.service.SuperheroSightingsServiceLayer;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +33,9 @@ public class OrganizationController {
     @Autowired
     SuperheroSightingsServiceLayer service;
 
+    Set<ConstraintViolation<Organization>> organizationViolations = new HashSet<>();
+    Set<ConstraintViolation<Address>> addressViolations = new HashSet<>();
+    
     @GetMapping("organizations")
     public String displayOrganizations(Model model) {
         List<Organization> organizations = service.getAllOrganizations();
@@ -38,17 +46,36 @@ public class OrganizationController {
     }
 
     @PostMapping("addOrganization")
-    public String addOrganization(HttpServletRequest request, Address address, Organization organization) {
+    public String addOrganization(HttpServletRequest request, Address address, Organization organization, Model model) {
         String[] heroVillainIDs = request.getParameterValues("heroVillainIDs");
         List<HeroVillain> members = new ArrayList<>();
 
-        for (String heroVillainID : heroVillainIDs) {
-            int id = Integer.parseInt(heroVillainID);
-            members.add(service.getHeroVillainByID(id));
+        if (heroVillainIDs != null) {
+            for (String heroVillainID : heroVillainIDs) {
+                int id = Integer.parseInt(heroVillainID);
+                members.add(service.getHeroVillainByID(id));
+            }
         }
-        organization.setMembers(members);
 
+        organization.setMembers(members);
         organization.setAddress(address);
+
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        organizationViolations = validate.validate(organization);
+        addressViolations = validate.validate(address);
+        
+        if (!organizationViolations.isEmpty() || !addressViolations.isEmpty()) {
+            List<Organization> organizations = service.getAllOrganizations();
+            List<HeroVillain> heroVillains = service.getAllHeroVillains();
+            model.addAttribute("organizationErrors", organizationViolations);
+            model.addAttribute("addressErrors", addressViolations);
+            model.addAttribute("organizations", organizations);
+            model.addAttribute("heroVillains", heroVillains);
+            model.addAttribute("badOrganization", organization);
+            
+            return "organizations";
+        }
+
         service.addOrganization(organization);
         return "redirect:/organizations";
     }
@@ -70,7 +97,7 @@ public class OrganizationController {
     }
 
     @PostMapping("editOrganization")
-    public String updateOrganization(Organization organization, Address address, HttpServletRequest request) {
+    public String updateOrganization(Organization organization, Address address, HttpServletRequest request, Model model) {
         String[] heroVillainIDs = request.getParameterValues("heroVillainIDs");
         List<HeroVillain> members = new ArrayList<>();
 
@@ -83,14 +110,44 @@ public class OrganizationController {
 
         organization.setMembers(members);
         organization.setAddress(address);
+        
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        organizationViolations = validate.validate(organization);
+        addressViolations = validate.validate(address);
+        
+        if (!organizationViolations.isEmpty() || !addressViolations.isEmpty()) {
+            List<Organization> organizations = service.getAllOrganizations();
+            List<HeroVillain> heroVillains = service.getAllHeroVillains();
+            model.addAttribute("organizationErrors", organizationViolations);
+            model.addAttribute("addressErrors", addressViolations);
+            model.addAttribute("organizations", organizations);
+            model.addAttribute("heroVillains", heroVillains);
+            model.addAttribute("badOrganization", organization);
+            
+            return "editOrganization";
+        }
+        
         service.updateOrganization(organization);
         return "redirect:/organizations";
     }
-    
+
     @GetMapping("organizationDetail")
     public String organizationDetail(Integer organizationID, Model model) {
         Organization organization = service.getOrganizationByID(organizationID);
         model.addAttribute("organization", organization);
         return "organizationDetail";
+    }
+
+    @GetMapping("deleteOrganization")
+    public String deleteOrganization(Integer organizationID, Model model) {
+        Organization organization = service.getOrganizationByID(organizationID);
+        model.addAttribute("organization", organization);
+        return "deleteOrganization";
+    }
+
+    @PostMapping("deleteOrganization")
+    public String confirmDeleteOrganization(Integer organizationID) {
+        service.deleteOrganizationByID(organizationID);
+        return "redirect:/organizations";
     }
 }

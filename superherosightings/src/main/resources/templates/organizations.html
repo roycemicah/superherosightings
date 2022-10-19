@@ -45,70 +45,170 @@
                         <label for="name" class="col-3 col-form-label">
                             Name</label>
                         <div class="col-9">
-                            <input type="text" name="name" id="name" class="form-control" />
+                            <input type="text" name="name" id="name" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.name} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!organizationErrors.isEmpty()}" th:each="error : ${organizationErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'name'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'name'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="description" class="col-3 col-form-label">
                             Description</label>
                         <div class="col-9">
-                            <textarea type="text" name="description" id="description" class="form-control"></textarea>
+                            <textarea type="text" name="description" id="description" class="form-control"
+                                th:text="${badOrganization} != null ? ${badOrganization.description} : ''"></textarea>
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!organizationErrors.isEmpty()}" th:each="error : ${organizationErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'description'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'description'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="streetNumber" class="col-3 col-form-label">
                             Street Number</label>
                         <div class="col-9">
-                            <input type="text" name="streetNumber" id="streetNumber" class="form-control" />
+                            <input type="text" name="streetNumber" id="streetNumber" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.address.streetNumber} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'streetNumber'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'streetNumber'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="streetName" class="col-3 col-form-label">
                             Street Name</label>
                         <div class="col-9">
-                            <input type="text" name="streetName" id="streetName" class="form-control" />
+                            <input type="text" name="streetName" id="streetName" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.address.streetName} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'streetName'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'streetName'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="city" class="col-3 col-form-label">
                             City</label>
                         <div class="col-9">
-                            <input type="text" name="city" id="city" class="form-control" />
+                            <input type="text" name="city" id="city" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.address.city} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'city'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'city'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="stateProvince" class="col-3 col-form-label">
                             State Province</label>
                         <div class="col-9">
-                            <input type="text" name="stateProvince" id="stateProvince" class="form-control" />
+                            <input type="text" name="stateProvince" id="stateProvince" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.address.stateProvince} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'stateProvince'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'stateProvince'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="zipPostalCode" class="col-3 col-form-label">
                             ZIP (Postal Code)</label>
                         <div class="col-9">
-                            <input type="text" name="zipPostalCode" id="zipPostalCode" class="form-control" />
+                            <input type="text" name="zipPostalCode" id="zipPostalCode" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.address.zipPostalCode} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'zipPostalCode'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'zipPostalCode'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="country" class="col-3 col-form-label">
                             Country</label>
                         <div class="col-9">
-                            <input type="text" name="country" id="country" class="form-control" />
+                            <input type="text" name="country" id="country" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.address.country} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'country'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'country'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="phone" class="col-3 col-form-label">
                             Phone</label>
                         <div class="col-9">
-                            <input type="tel" name="phone" id="phone" class="form-control" />
+                            <input type="tel" name="phone" id="phone" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.phone} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!organizationErrors.isEmpty()}" th:each="error : ${organizationErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'phone'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'phone'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="email" class="col-3 col-form-label">
                             Email</label>
                         <div class="col-9">
-                            <input type="email" name="email" id="email" class="form-control" />
+                            <input type="email" name="email" id="email" class="form-control"
+                                th:value="${badOrganization} != null ? ${badOrganization.email} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!organizationErrors.isEmpty()}" th:each="error : ${organizationErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'email'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'email'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
 
@@ -117,8 +217,9 @@
                             Heroes (Villains)</label>
                         <div class="col-9">
                             <select multiple id="heroVillains" name="heroVillainIDs" class="form-control">
-                                <option th:each="heroVillain : ${heroVillains}"
-                                    th:value="${heroVillain.heroVillainID}" th:text="${heroVillain.name}">
+                                <option th:each="heroVillain : ${heroVillains}" th:value="${heroVillain.heroVillainID}"
+                                    th:text="${heroVillain.name}"
+                                    th:selected="${badOrganization} != null ? ${badOrganization.members.contains(heroVillain)} : false">
                                     Name</option>
                             </select>
                         </div>
@@ -152,9 +253,15 @@
                                 Address</td>
                             <td th:text=" ${organization.phone}">Phone</td>
                             <td th:text=" ${organization.email}">Email</td>
-                            <td><a href="#" th:href="@{/organizationDetail(organizationID=${organization.organizationID})}">Details</a></td>
-                            <td><a href="#" th:href="@{/editOrganization(organizationID=${organization.organizationID})}">Edit</a></td>
-                            <td><a href="#" th:href="@{/deleteOrganization(organizationID=${organization.organizationID})}">Delete</a></td>
+                            <td><a href="#"
+                                    th:href="@{/organizationDetail(organizationID=${organization.organizationID})}">Details</a>
+                            </td>
+                            <td><a href="#"
+                                    th:href="@{/editOrganization(organizationID=${organization.organizationID})}">Edit</a>
+                            </td>
+                            <td><a href="#"
+                                    th:href="@{/deleteOrganization(organizationID=${organization.organizationID})}">Delete</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

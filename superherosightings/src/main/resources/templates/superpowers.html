@@ -45,16 +45,34 @@
                         <label for="name" class="col-3 col-form-label">
                             Name</label>
                         <div class="col-9">
-                            <input type="text" name="name" 
-                                   id="name" class="form-control"/>
+                            <input type="text" name="name" id="name" class="form-control"
+                                th:value="${badSuperpower != null ? badSuperpower.name : ''}" />
                         </div>
                     </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'name'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'name'"
+                                th:text="${error.message}">Error
+                                message</p>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <label for="description" class="col-3 col-form-label">
                             Description</label>
                         <div class="col-9">
-                            <textarea type="text" name="description" 
-                                   id="description" class="form-control"></textarea>
+                            <textarea name="description" id="description" class="form-control"
+                                th:text="${badSuperpower != null ? badSuperpower.description : ''}"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'description'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'description'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
 
@@ -81,16 +99,21 @@
                             <td th:text="${superpower.superpowerID}">Superpower ID</td>
                             <td th:text="${superpower.name}">Name</td>
                             <td th:text="${superpower.description}">Description</td>
-                            <td><a href="#" th:href="@{/superpowerDetail(superpowerID=${superpower.superpowerID})}">Details</a></td>
-                            <td><a href="#" th:href="@{/editSuperpower(superpowerID=${superpower.superpowerID})}">Edit</a></td>
-                            <td><a href="#" th:href="@{/deleteSuperpower(superpowerID=${superpower.superpowerID})}">Delete</a></td>
+                            <td><a href="#"
+                                    th:href="@{/superpowerDetail(superpowerID=${superpower.superpowerID})}">Details</a>
+                            </td>
+                            <td><a href="#"
+                                    th:href="@{/editSuperpower(superpowerID=${superpower.superpowerID})}">Edit</a></td>
+                            <td><a href="#"
+                                    th:href="@{/deleteSuperpower(superpowerID=${superpower.superpowerID})}">Delete</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

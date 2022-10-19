@@ -5,18 +5,36 @@
 package com.sg.superherosightings.entities;
 
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author roycerabanal
  */
 public class Address {
-
+    @NotBlank(message = "Street Number must not be empty.")
+    @Size(max = 10, message = "Street Number must be less than 10 characters.")
     String streetNumber;
+    
+    @NotBlank(message = "Street Name must not be empty.")
+    @Size(max = 20, message = "Street Name must be less than 20 characters.")
     String streetName;
+    
+    @NotBlank(message = "City must not be empty.")
+    @Size(max = 30, message = "City must be less than 30 characters.")
     String city;
+    
+    @NotBlank(message = "State / Province must not be empty.")
+    @Size(max = 20, message = "State / Province must be less than 20 characters.")
     String stateProvince;
+    
+    @NotBlank(message = "ZIP / Postal Code must not be empty.")
+    @Size(max = 12, message = "ZIP / Postal Code must be less than 12 characters.")
     String zipPostalCode;
+    
+    @NotBlank(message = "Country must not be empty.")
+    @Size(max = 20, message = "Country must be less than 20 characters.")
     String country;
 
     public String getStreetNumber() {

@@ -45,80 +45,170 @@
                         <label for="name" class="col-3 col-form-label">
                             Name</label>
                         <div class="col-9">
-                            <input type="text" name="name" 
-                                   id="name" class="form-control"/>
+                            <input type="text" name="name" id="name" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.name} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!locationErrors.isEmpty()}" th:each="error : ${locationErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'name'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'name'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="description" class="col-3 col-form-label">
                             Description</label>
                         <div class="col-9">
-                            <textarea type="text" name="description" 
-                                   id="description" class="form-control"></textarea>
+                            <textarea type="text" name="description" id="description" class="form-control"
+                                th:text="${badLocation} != null ? ${badLocation.description} : ''"></textarea>
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!locationErrors.isEmpty()}" th:each="error : ${locationErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'description'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'description'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="latitude" class="col-3 col-form-label">
                             Latitude</label>
                         <div class="col-9">
-                            <input type="text" name="latitude" 
-                                   id="latitude" class="form-control"/>
+                            <input type="text" name="latitude" id="latitude" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.latitude} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!locationErrors.isEmpty()}" th:each="error : ${locationErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'latitude'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'latitude'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="longitude" class="col-3 col-form-label">
                             Longitude</label>
                         <div class="col-9">
-                            <input type="text" name="longitude" 
-                                   id="longitude" class="form-control"/>
+                            <input type="text" name="longitude" id="longitude" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.longitude} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!locationErrors.isEmpty()}" th:each="error : ${locationErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'longitude'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'longitude'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="streetNumber" class="col-3 col-form-label">
                             Street Number</label>
                         <div class="col-9">
-                            <input type="text" name="streetNumber" 
-                                   id="streetNumber" class="form-control"/>
+                            <input type="text" name="streetNumber" id="streetNumber" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.address.streetNumber} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'streetNumber'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'streetNumber'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="streetName" class="col-3 col-form-label">
                             Street Name</label>
                         <div class="col-9">
-                            <input type="text" name="streetName" 
-                                   id="streetName" class="form-control"/>
+                            <input type="text" name="streetName" id="streetName" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.address.streetName} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'streetName'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'streetName'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="city" class="col-3 col-form-label">
                             City</label>
                         <div class="col-9">
-                            <input type="text" name="city" 
-                                   id="city" class="form-control"/>
+                            <input type="text" name="city" id="city" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.address.city} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'city'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'city'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="stateProvince" class="col-3 col-form-label">
                             State Province</label>
                         <div class="col-9">
-                            <input type="text" name="stateProvince" 
-                                   id="stateProvince" class="form-control"/>
+                            <input type="text" name="stateProvince" id="stateProvince" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.address.stateProvince} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'stateProvince'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'stateProvince'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="zipPostalCode" class="col-3 col-form-label">
                             ZIP Postal Code</label>
                         <div class="col-9">
-                            <input type="text" name="zipPostalCode" 
-                                   id="zipPostalCode" class="form-control"/>
+                            <input type="text" name="zipPostalCode" id="zipPostalCode" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.address.zipPostalCode} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'zipPostalCode'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'zipPostalCode'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="country" class="col-3 col-form-label">
                             Country</label>
                         <div class="col-9">
-                            <input type="text" name="country" 
-                                   id="country" class="form-control"/>
+                            <input type="text" name="country" id="country" class="form-control"
+                                th:value="${badLocation} != null ? ${badLocation.address.country} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!addressErrors.isEmpty()}" th:each="error : ${addressErrors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'country'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'country'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
 
@@ -149,15 +239,17 @@
                             <td th:text="${location.latitude}">Latitude</td>
                             <td th:text="${location.longitude}">Longitude</td>
                             <td th:text="${location.address.city + ', ' + location.address.stateProvince}">Address</td>
-                            <td><a href="#" th:href="@{/locationDetail(locationID=${location.locationID})}">Details</a></td>
+                            <td><a href="#" th:href="@{/locationDetail(locationID=${location.locationID})}">Details</a>
+                            </td>
                             <td><a href="#" th:href="@{/editLocation(locationID=${location.locationID})}">Edit</a></td>
-                            <td><a href="#" th:href="@{/deleteLocation(locationID=${location.locationID})}">Delete</a></td>
+                            <td><a href="#" th:href="@{/deleteLocation(locationID=${location.locationID})}">Delete</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

@@ -6,16 +6,25 @@ package com.sg.superherosightings.entities;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 
 /**
  *
  * @author roycerabanal
  */
 public class Sighting {
-    
+
     int sightingID;
+
+    @NotNull(message = "Location must not be empty.")
     Location location;
+
+    @NotNull(message = "Hero (or Villain) must not be empty.")
     HeroVillain heroVillain;
+
+    @Past(message = "Date must be in the past.")
+    @NotNull(message = "Date must not be empty.")
     LocalDate date;
 
     public int getSightingID() {

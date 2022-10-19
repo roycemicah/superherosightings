@@ -10,9 +10,14 @@ import com.sg.superherosightings.entities.Superpower;
 import com.sg.superherosightings.service.SuperheroSightingsServiceLayer;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +38,8 @@ public class HeroVillainController {
     @Autowired
     SuperheroSightingsServiceLayer service;
 
+    Set<ConstraintViolation<HeroVillain>> violations = new HashSet<>();
+
     @GetMapping("heroVillains")
     public String displayHeroVillains(Model model) {
         List<HeroVillain> heroVillains = service.getAllHeroVillains();
@@ -45,17 +52,26 @@ public class HeroVillainController {
     }
 
     @PostMapping("addHeroVillain")
-    public String addHeroVillain(HeroVillain heroVillain, HttpServletRequest request, @RequestParam("file") MultipartFile image) {
-        String[] organizationIDs = request.getParameterValues("organizationIDs");
+    public String addHeroVillain(HeroVillain heroVillain, HttpServletRequest request, @RequestParam("file") MultipartFile image, Model model) {
         String superpowerID = request.getParameter("superpowerID");
-        List<Organization> organizations = new ArrayList<>();
 
-        try {
-            byte[] imageBytes = image.getBytes();
-            heroVillain.setImage(imageBytes);
-        } catch (IOException ex) {
+        Superpower superpower = null;
 
+        if (superpowerID != null) {
+            int id = 0;
+            
+            try {
+                id = Integer.parseInt(superpowerID);
+                superpower = service.getSuperpowerByID(id);
+            } catch (NumberFormatException ex) {
+
+            }
+            
         }
+        heroVillain.setSuperpower(superpower);
+
+        List<Organization> organizations = new ArrayList<>();
+        String[] organizationIDs = request.getParameterValues("organizationIDs");
 
         if (organizationIDs != null) {
             for (String id : organizationIDs) {
@@ -67,10 +83,32 @@ public class HeroVillainController {
 
         heroVillain.setOrganizations(organizations);
 
-        Superpower superpower;
-        superpower = service.getSuperpowerByID(Integer.parseInt(superpowerID));
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(heroVillain);
 
-        heroVillain.setSuperpower(superpower);
+        if (!violations.isEmpty()) {
+            organizations = service.getAllOrganizations();
+
+            for (Organization organization : organizations) {
+                organization.setMembers(new ArrayList<>());
+            }
+
+            List<Superpower> superpowers = service.getAllSuperpowers();
+            List<HeroVillain> heroVillains = service.getAllHeroVillains();
+            model.addAttribute("errors", violations);
+            model.addAttribute("badHeroVillain", heroVillain);
+            model.addAttribute("organizations", organizations);
+            model.addAttribute("superpowers", superpowers);
+            model.addAttribute("heroVillains", heroVillains);
+            return "heroVillains";
+        }
+
+        try {
+            byte[] imageBytes = image.getBytes();
+            heroVillain.setImage(imageBytes);
+        } catch (IOException ex) {
+
+        }
 
         service.addHeroVillain(heroVillain);
         return "redirect:/heroVillains";
@@ -94,33 +132,69 @@ public class HeroVillainController {
     }
 
     @PostMapping("editHeroVillain")
-    public String updateHeroVillain(HeroVillain heroVillain, HttpServletRequest request, @RequestParam("file") MultipartFile image) {
+    public String updateHeroVillain(HeroVillain heroVillain, HttpServletRequest request, @RequestParam("file") MultipartFile image, Model model) {
+        String superpowerID = request.getParameter("superpowerID");
+
+        Superpower superpower = null;
+
+        if (superpowerID != null) {
+            int id = 0;
+            
+            try {
+                id = Integer.parseInt(superpowerID);
+                superpower = service.getSuperpowerByID(id);
+            } catch (NumberFormatException ex) {
+
+            }
+            
+        }
+        heroVillain.setSuperpower(superpower);
+
         List<Organization> organizations = new ArrayList<>();
         String[] organizationIDs = request.getParameterValues("organizationIDs");
-        String superpowerID = request.getParameter("superpowerID");
-        heroVillain.setSuperpower(service.getSuperpowerByID(Integer.parseInt(superpowerID)));
 
         if (organizationIDs != null) {
-            for (String organizationID : organizationIDs) {
-                int id = Integer.parseInt(organizationID);
-                Organization organization = service.getOrganizationByID(id);
-                organizations.add(organization);
+            for (String id : organizationIDs) {
+                //convert to int
+                int integerID = Integer.parseInt(id);
+                organizations.add(service.getOrganizationByID(integerID));
             }
         }
 
         heroVillain.setOrganizations(organizations);
 
-        try {            
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(heroVillain);
+
+        if (!violations.isEmpty()) {
+            organizations = service.getAllOrganizations();
+
+            for (Organization organization : organizations) {
+                organization.setMembers(new ArrayList<>());
+            }
+
+            for (Organization organization : heroVillain.getOrganizations()) {
+                organization.setMembers(new ArrayList<>());
+            }
+            List<Superpower> superpowers = service.getAllSuperpowers();
+            model.addAttribute("errors", violations);
+            model.addAttribute("badHeroVillain", heroVillain);
+            model.addAttribute("organizations", organizations);
+            model.addAttribute("superpowers", superpowers);
+            return "editHeroVillain";
+        }
+
+        try {
             byte[] imageBytes = image.getBytes();
             heroVillain.setImage(imageBytes);
         } catch (IOException ex) {
 
         }
-        
+
         service.updateHeroVillain(heroVillain);
         return "redirect:/heroVillains";
     }
-    
+
     @GetMapping("heroVillainDetail")
     public String heroVillainDetail(Integer heroVillainID, Model model) {
         HeroVillain heroVillain = service.getHeroVillainByID(heroVillainID);
@@ -140,7 +214,7 @@ public class HeroVillainController {
         model.addAttribute("heroVillain", heroVillain);
         return "deleteHeroVillain";
     }
-    
+
     @PostMapping("deleteHeroVillain")
     public String confirmDeleteHeroVillain(Integer heroVillainID) {
         service.deleteHeroVillainByID(heroVillainID);

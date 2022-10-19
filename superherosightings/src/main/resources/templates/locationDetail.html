@@ -60,9 +60,9 @@
             </div>
             <div class="col-6 text-right"><strong>Address</strong></div>
             <div class="col-6 text-left">
-                <span th:text="${location.address.streetNumber} + ' ' + ${location.address.streetName}"></span><br/>
-                <span th:text="${location.address.city} + ', ' + ${location.address.stateProvince} "></span><br/>
-                <span th:text="${location.address.country}"></span><br/>
+                <span th:text="${location.address.streetNumber} + ' ' + ${location.address.streetName}"></span><br />
+                <span th:text="${location.address.city} + ', ' + ${location.address.stateProvince} "></span><br />
+                <span th:text="${location.address.country}"></span><br />
                 <span th:text="${location.address.zipPostalCode}"></span>
             </div>
             <div class="col-6 text-right"><strong>Hero (Villains) Sighted: </strong></div>
@@ -74,8 +74,7 @@
             </div>
             <div class="col-6 text-right"><strong>Location Image</strong></div>
             <div class="col-6 text-left">
-                <img th:src="'/locationImage/' + ${location.locationID}" width="470px"
-                height="400px"/>
+                <img th:src="'/locationImage/' + ${location.locationID}" width="470px" height="400px" />
             </div>
         </div>
 

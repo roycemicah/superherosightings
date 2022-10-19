@@ -45,33 +45,83 @@
                         <label for="location" class="col-3 col-form-label">
                             Location</label>
                         <div class="col-9">
-                            <select id="location" name="locationID" class="form-control">
+                            <select id="location" name="locationID" class="form-control" th:if="${badSighting != null}">
+                                <option selected value> -- select an option -- </option>
                                 <option th:each="location : ${locations}" th:value="${location.locationID}"
-                                    th:text="${location.name}" th:selected="${sighting.location.equals(location)}">
+                                    th:text="${location.name}"
+                                    th:selected="${badSighting.location != null} ? ${badSighting.location.locationID} == ${location.locationID}">
                                     Location Name</option>
                             </select>
+                            <select id="location" name="locationID" class="form-control" th:if="${badSighting == null}">
+                                <option selected value> -- select an option -- </option>
+                                <option th:each="location : ${locations}" th:value="${location.locationID}"
+                                    th:text="${location.name}"
+                                    th:selected="${sighting.location.locationID} == ${location.locationID}">
+                                    Location Name</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'location'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'location'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="heroVillain" class="col-3 col-form-label">
                             Hero (Villain)</label>
-                            <div class="col-9">
-                                <select id="heroVillain" name="heroVillainID" class="form-control">
-                                    <option th:each="heroVillain : ${heroVillains}" th:value="${heroVillain.heroVillainID}"
-                                        th:text="${heroVillain.name}" th:selected="${sighting.heroVillain.equals(heroVillain)}">
-                                        Hero (Villain) Name</option>
-                                </select>
-                            </div>
+                        <div class="col-9">
+                            <select id="heroVillain" name="heroVillainID" class="form-control"
+                                th:if="${badSighting != null}">
+                                <option selected value> -- select an option -- </option>
+                                <option th:each="heroVillain : ${heroVillains}" th:value="${heroVillain.heroVillainID}"
+                                    th:text="${heroVillain.name}"
+                                    th:selected="${badSighting.heroVillain != null} ? ${badSighting.heroVillain.heroVillainID} == ${heroVillain.heroVillainID}">
+                                    Hero (Villain) Name</option>
+                            </select>
+                            <select id="heroVillain" name="heroVillainID" class="form-control"
+                                th:if="${badSighting == null}">
+                                <option selected value> -- select an option -- </option>
+                                <option th:each="heroVillain : ${heroVillains}" th:value="${heroVillain.heroVillainID}"
+                                    th:text="${heroVillain.name}"
+                                    th:selected="${sighting.heroVillain.heroVillainID} == ${heroVillain.heroVillainID}">
+                                    Hero (Villain) Name</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'heroVillain'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'heroVillain'"
+                                th:text="${error.message}">Error
+                                message</p>
+                        </div>
                     </div>
                     <div class="form-group row">
                         <label for="date" class="col-3 col-form-label">
                             Date</label>
                         <div class="col-9">
-                            <input type="date" name="dateString" 
-                                   id="date" class="form-control" th:value="${sighting.getDate}"/>
+                            <input type="date" name="dateString" id="date" class="form-control"
+                                th:value="${badSighting.date != null} ? ${badSighting.date}"
+                                th:if="${badSighting != null}" />
+                            <input type="date" name="dateString" id="date" class="form-control"
+                                th:value="${sighting.date}" th:if="${badSighting == null}" />
                         </div>
                     </div>
-                    <input type="hidden" name="sightingID" th:value="${sighting.sightingID}"/>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'date'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'date'"
+                                th:text="${error.message}">Error
+                                message</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="sightingID" th:value="${sighting.sightingID}" />
                     <button type="submit" class="btn btn-primary">Edit Sighting</button>
                 </form>
             </div>

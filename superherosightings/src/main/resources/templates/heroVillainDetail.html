@@ -56,7 +56,7 @@
             </div>
             <div class="col-6 text-right"><strong>Superpower</strong></div>
             <div class="col-6 text-left">
-                <span th:text="${heroVillain.superpower.name}"></span>
+                <span th:text="${heroVillain.superpower != null} ? ${heroVillain.superpower.name} : 'none'"></span>
             </div>
             <div class="col-6 text-right"><strong>Organizations: </strong></div>
             <div class="col-6 text-left">
@@ -74,8 +74,7 @@
             </div>
             <div class="col-6 text-right"><strong>Hero Image</strong></div>
             <div class="col-6 text-left">
-                <img th:src="'/heroVillainImage/' + ${heroVillain.heroVillainID}" width="300px"
-                height="250px"/>
+                <img th:src="'/heroVillainImage/' + ${heroVillain.heroVillainID}" width="300px" height="250px" />
             </div>
         </div>
 

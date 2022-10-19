@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -16,10 +19,20 @@ import java.util.Objects;
 public class HeroVillain {
     
     int heroVillainID;
+    
+    @NotBlank(message = "Name must not be empty.")
+    @Size(max = 30, message = "Name must be less than 30 characters.")
     String name;
+    
     boolean isHero;
+    
+    @NotBlank(message = "Description must not be empty.")
+    @Size(max = 100, message = "Description must be less than 100 characters.")
     String description;
+    
+    @NotNull(message = "Hero (Villain) MUST have a superpower.")
     Superpower superpower;
+    
     byte[] image = new byte[0];
     List<Location> locations = new ArrayList<>();
     List<Organization> organizations = new ArrayList<>();

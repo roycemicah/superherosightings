@@ -46,7 +46,16 @@
                             Name</label>
                         <div class="col-9">
                             <input type="text" name="name" id="name" class="form-control"
-                                th:value="${heroVillain.name}" />
+                                th:value="${badHeroVillain != null} ? ${badHeroVillain.name} : ${heroVillain.name}" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'name'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'name'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
 
@@ -55,8 +64,9 @@
                             Is Hero</label>
                         <div class="col-9">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="isHero" value="true"
-                                    th:checked="${heroVillain.isHero}">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="isHero"
+                                    value="true"
+                                    th:checked="${badHeroVillain != null} ? ${badHeroVillain.isHero} : ${heroVillain.isHero}">
                                 <label class="form-check-label" for="inlineCheckbox1">Yes</label>
                             </div>
                         </div>
@@ -66,20 +76,48 @@
                         <label for="description" class="col-3 col-form-label">
                             Description</label>
                         <div class="col-9">
-                            <input type="text" name="description" id="description" class="form-control"
-                                th:value="${heroVillain.description}" />
+                            <textarea name="description" id="description" class="form-control"
+                                th:text="${badHeroVillain != null} ? ${badHeroVillain.description} : ${heroVillain.description}"></textarea>
                         </div>
                     </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'description'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'description'"
+                                th:text="${error.message}">Error
+                                message</p>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <label for="superpower" class="col-3 col-form-label">
                             Superpower</label>
                         <div class="col-9">
-                            <select id="superpower" name="superpowerID" class="form-control">
+                            <select id="superpower" name="superpowerID" class="form-control"
+                                th:if="${badHeroVillain == null}">
+                                <option selected value> -- select an option -- </option>
                                 <option th:each="superpower : ${superpowers}" th:value="${superpower.superpowerID}"
                                     th:text="${superpower.name}"
-                                    th:selected="${heroVillain.superpower.equals(superpower)}">
+                                    th:selected="${heroVillain.superpower != null} ? ${heroVillain.superpower.equals(superpower)} : false">
                                     Superpower Name</option>
                             </select>
+                            <select id="superpower" name="superpowerID" class="form-control"
+                                th:if="${badHeroVillain != null}">
+                                <option selected value> -- select an option -- </option>
+                                <option th:each="superpower : ${superpowers}" th:value="${superpower.superpowerID}"
+                                    th:text="${superpower.name}"
+                                    th:selected="${badHeroVillain.superpower != null} ? ${badHeroVillain.superpower.equals(superpower)} : false">
+                                    Superpower Name</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'superpower'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'superpower'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -89,12 +127,12 @@
                             <select multiple id="organizations" name="organizationIDs" class="form-control">
                                 <option th:each="organization : ${organizations}"
                                     th:value="${organization.organizationID}" th:text="${organization.name}"
-                                    th:selected="${heroVillain.organizations.contains(organization)}">
+                                    th:selected="${badHeroVillain != null} ? ${badHeroVillain.organizations.contains(organization)} : ${heroVillain.organizations.contains(organization)}">
                                     Organization Name</option>
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-2">
 
                         </div>
@@ -105,13 +143,13 @@
 
                     </div>
                     <div class="form-group row">
-                        <label for="image" class="col-3 col-form-label">
+                        <label for="image" class="col-3">
                             Upload New Image: </label>
                         <div class="col-9">
-                            <input type="file" name="file" id="image" class="form-control" />
+                            <input type="file" name="file" id="image" class="form-control-file" />
                         </div>
                     </div>
-                    <input type="hidden" name="heroVillainID" th:value="${heroVillain.heroVillainID}"/>
+                    <input type="hidden" name="heroVillainID" th:value="${heroVillain.heroVillainID}" />
                     <button type="submit" class="btn btn-primary">Edit Hero (Villain)</button>
                 </form>
             </div>

@@ -45,7 +45,17 @@
                         <label for="name" class="col-3 col-form-label">
                             Name</label>
                         <div class="col-9">
-                            <input type="text" name="name" id="name" class="form-control" />
+                            <input type="text" name="name" id="name" class="form-control"
+                                th:value="${badHeroVillain} != null ? ${badHeroVillain.name} : ''" />
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'name'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'name'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
 
@@ -54,7 +64,9 @@
                             Is Hero?</label>
                         <div class="col-9">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="isHero" value="true">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="isHero"
+                                    value="true"
+                                    th:checked="${badHeroVillain} != null ? ${badHeroVillain.isHero} : false">
                                 <label class="form-check-label" for="inlineCheckbox1">&nbsp;&nbsp;Yes, a Hero!</label>
                             </div>
                         </div>
@@ -64,18 +76,46 @@
                         <label for="description" class="col-3 col-form-label">
                             Description</label>
                         <div class="col-9">
-                            <input type="text" name="description" id="description" class="form-control" />
+                            <textarea name="description" id="description" class="form-control"
+                                th:text="${badHeroVillain != null ? badHeroVillain.description : ''}"></textarea>
+                        </div>
+                    </div>
+                    <!-- VALIDATION -->
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'description'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'description'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="superpower" class="col-3 col-form-label">
                             Superpower</label>
                         <div class="col-9">
-                            <select id="superpower" name="superpowerID" class="form-control">
+                            <select id="superpower" name="superpowerID" class="form-control"
+                                th:if="${badHeroVillain != null}">
+                                <option selected value> -- select an option -- </option>
+                                <option th:each="superpower : ${superpowers}" th:value="${superpower.superpowerID}"
+                                    th:text="${superpower.name}"
+                                    th:selected="${badHeroVillain.superpower != null} ? ${badHeroVillain.superpower.equals(superpower)} : false">
+                                    Superpower Name</option>
+                            </select>
+                            <select id="superpower" name="superpowerID" class="form-control"
+                                th:if="${badHeroVillain == null}">
+                                <option selected value> -- select an option -- </option>
                                 <option th:each="superpower : ${superpowers}" th:value="${superpower.superpowerID}"
                                     th:text="${superpower.name}">
                                     Superpower Name</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${!errors.isEmpty()}" th:each="error : ${errors}">
+                        <div class="col-3" th:if="${error.propertyPath.toString()} == 'superpower'"></div>
+                        <div class="col-9">
+                            <p class="alert alert-danger" th:if="${error.propertyPath.toString()} == 'superpower'"
+                                th:text="${error.message}">Error
+                                message</p>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -84,16 +124,17 @@
                         <div class="col-9">
                             <select multiple id="organizations" name="organizationIDs" class="form-control">
                                 <option th:each="organization : ${organizations}"
-                                    th:value="${organization.organizationID}" th:text="${organization.name}">
+                                    th:value="${organization.organizationID}" th:text="${organization.name}"
+                                    th:selected="${badHeroVillain} != null ? ${badHeroVillain.organizations.contains(organization)} : false">
                                     Organization Name</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="image" class="col-3 col-form-label">
+                        <label for="image" class="col-3">
                             Upload Image: </label>
                         <div class="col-9">
-                            <input type="file" name="file" id="image" class="form-control" />
+                            <input type="file" name="file" id="image" class="form-control-file" />
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Hero (Villain)</button>
@@ -120,10 +161,17 @@
                             <td th:text="${heroVillain.heroVillainID}">Hero (Villain) ID</td>
                             <td th:text="${heroVillain.name}">Name</td>
                             <td th:text="${heroVillain.isHero}">Is Hero</td>
-                            <td th:text="${heroVillain.superpower != null} ? ${heroVillain.superpower.name} : 'none'">Superpower</td>
-                            <td><a href="#" th:href="@{/heroVillainDetail(heroVillainID=${heroVillain.heroVillainID})}">Details</a></td>
-                            <td><a href="#" th:href="@{editHeroVillain(heroVillainID=${heroVillain.heroVillainID})}">Edit</a></td>
-                            <td><a href="#" th:href="@{deleteHeroVillain(heroVillainID=${heroVillain.heroVillainID})}">Delete</a></td>
+                            <td th:text="${heroVillain.superpower != null} ? ${heroVillain.superpower.name} : 'none'">
+                                Superpower</td>
+                            <td><a href="#"
+                                    th:href="@{/heroVillainDetail(heroVillainID=${heroVillain.heroVillainID})}">Details</a>
+                            </td>
+                            <td><a href="#"
+                                    th:href="@{editHeroVillain(heroVillainID=${heroVillain.heroVillainID})}">Edit</a>
+                            </td>
+                            <td><a href="#"
+                                    th:href="@{deleteHeroVillain(heroVillainID=${heroVillain.heroVillainID})}">Delete</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

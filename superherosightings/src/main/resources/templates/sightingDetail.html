@@ -43,19 +43,21 @@
 
             <div class="col-6 text-right"><strong>Location</strong></div>
             <div class="col-6 text-left">
-                <span th:text="${sighting.location.name}"></span><br/>
-                <span th:text="${sighting.location.description}"></span><br/>
-                <span th:text="${sighting.location.address.streetNumber} + ' ' + ${sighting.location.address.streetName}"></span><br/>
-                <span th:text="${sighting.location.address.city} + ', ' + ${sighting.location.address.stateProvince} "></span><br/>
-                <span th:text="${sighting.location.address.country}"></span><br/>
-                <span th:text="${sighting.location.address.zipPostalCode}"></span><br/>
+                <span th:text="${sighting.location.name}"></span><br />
+                <span th:text="${sighting.location.description}"></span><br />
+                <span
+                    th:text="${sighting.location.address.streetNumber} + ' ' + ${sighting.location.address.streetName}"></span><br />
+                <span
+                    th:text="${sighting.location.address.city} + ', ' + ${sighting.location.address.stateProvince} "></span><br />
+                <span th:text="${sighting.location.address.country}"></span><br />
+                <span th:text="${sighting.location.address.zipPostalCode}"></span><br />
                 <img th:src="'/locationImage/' + ${sighting.location.locationID}" width="500px" height="450px">
             </div>
 
             <div class="col-6 text-right"><strong>Hero (Villain) Sighted: </strong></div>
             <div class="col-6 text-left">
-                    <span th:text="${sighting.heroVillain.name}">
-                        Display Hero (Villain) Sighted</span><br /> 
+                <span th:text="${sighting.heroVillain.name}">
+                    Display Hero (Villain) Sighted</span><br />
             </div>
             <div class="col-6 text-right"><strong>Date</strong></div>
             <div class="col-6 text-left">

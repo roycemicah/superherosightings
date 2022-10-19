@@ -7,6 +7,8 @@ package com.sg.superherosightings.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -15,11 +17,25 @@ import java.util.Objects;
 public class Organization {
     
     int organizationID;
+    
+    @NotBlank(message = "Name must not be empty.")
+    @Size(max = 30, message = "Name must be less than 30 characters.")
     String name;
+    
+    @NotBlank(message = "Description must not be empty.")
+    @Size(max = 100, message = "Description must be less than 100 characters.")
     String description;
+    
     Address address;
+    
+    @NotBlank(message = "Phone must not be empty.")
+    @Size(max = 15, message = "Phone must be less than 15 characters.")
     String phone;
+    
+    @NotBlank(message = "Email must not be empty.")
+    @Size(max = 50, message = "Email must be less than 50 characters.")
     String email;
+    
     List<HeroVillain> members = new ArrayList<>(); 
 
     public int getOrganizationID() {

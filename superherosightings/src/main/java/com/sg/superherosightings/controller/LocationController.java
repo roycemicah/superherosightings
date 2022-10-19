@@ -8,9 +8,14 @@ import com.sg.superherosightings.entities.Address;
 import com.sg.superherosightings.entities.Location;
 import com.sg.superherosightings.service.SuperheroSightingsServiceLayer;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +33,9 @@ public class LocationController {
     @Autowired
     SuperheroSightingsServiceLayer service;
     
+    Set<ConstraintViolation<Location>> locationViolations = new HashSet<>();
+    Set<ConstraintViolation<Address>> addressViolations = new HashSet<>();
+    
     @GetMapping("locations")
     public String displayLocations(Model model) {
         List<Location> locations = service.getAllLocations();
@@ -36,8 +44,22 @@ public class LocationController {
     }
     
     @PostMapping("addLocation")
-    public String addLocation(Location location, Address address) {
+    public String addLocation(Location location, Address address, Model model) {
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        locationViolations = validate.validate(location);
+        addressViolations = validate.validate(address);
         location.setAddress(address);
+        
+        if(!locationViolations.isEmpty() || !addressViolations.isEmpty()) {
+            List<Location> locations = service.getAllLocations();
+            model.addAttribute("badLocation", location);
+            model.addAttribute("locationErrors", locationViolations);
+            model.addAttribute("addressErrors", addressViolations);
+            model.addAttribute("locations", locations);
+            
+            return "locations";
+        }
+        
         service.addLocation(location);
         return "redirect:/locations";
     }
@@ -52,8 +74,23 @@ public class LocationController {
     }
     
     @PostMapping("editLocation")
-    public String updateLocation(Location location, Address address){
+    public String updateLocation(Location location, Address address, Model model){
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        locationViolations = validate.validate(location);
+        addressViolations = validate.validate(address);
+        
         location.setAddress(address);
+        
+        if(!locationViolations.isEmpty() || !addressViolations.isEmpty()) {
+            List<Location> locations = service.getAllLocations();
+            model.addAttribute("badLocation", location);
+            model.addAttribute("locationErrors", locationViolations);
+            model.addAttribute("addressErrors", addressViolations);
+            model.addAttribute("locations", locations);
+            
+            return "editlocation";
+        }
+        
         service.updateLocation(location);
         return "redirect:/locations";
     }
@@ -71,4 +108,16 @@ public class LocationController {
         StreamUtils.copy(location.getImage(), response.getOutputStream());
     }
     
+    @GetMapping("deleteLocation")
+    public String deleteLocation(Integer locationID, Model model) {
+        Location location = service.getLocationByID(locationID);
+        model.addAttribute("location", location);
+        return "deleteLocation";
+    }
+    
+    @PostMapping("deleteLocation")
+    public String confirmDeleteLocation(Integer locationID) {
+        service.deleteLocationByID(locationID);
+        return "redirect:/locations";
+    }
 }
