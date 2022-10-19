@@ -71,7 +71,7 @@
                     </div>
                     <div class="form-group row">
                         <label for="heroVillain" class="col-3 col-form-label">
-                            Hero (Villain)</label>
+                            Hero / Villain</label>
                         <div class="col-9">
                             <select id="heroVillain" name="heroVillainID" class="form-control"
                                 th:if="${badSighting != null}">
@@ -132,7 +132,7 @@
                         <tr>
                             <th>Sighting ID</th>
                             <th>Location</th>
-                            <th>Hero Villain</th>
+                            <th>Hero / Villain</th>
                             <th>Date</th>
                             <th>Details</th>
                             <th>Edit</th>
@@ -143,7 +143,7 @@
                         <tr th:each="sighting: ${sightings}">
                             <td th:text="${sighting.sightingID}">Sighting ID</td>
                             <td th:text="${sighting.location.name}">Location</td>
-                            <td th:text="${sighting.heroVillain.name}">Hero Villain</td>
+                            <td th:text="${sighting.heroVillain.name}">Hero / Villain</td>
                             <td th:text="${sighting.date}">Date</td>
                             <td><a href="#" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}">Details</a>
                             </td>
