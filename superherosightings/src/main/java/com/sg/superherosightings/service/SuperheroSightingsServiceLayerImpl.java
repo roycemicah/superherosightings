@@ -200,4 +200,18 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
         return heroVillainDao.getHeroVillainsBySuperpowerID(superpowerID);
     }
 
+    // Landing page
+    @Override
+    public List<Sighting> get10MostRecentSightings() {
+        List<Sighting> sightings = sightingDao.getSightingsOrderedByDate();
+
+        try {
+            sightings = sightings.subList(0, 10);
+            return sightings;
+        } catch (IndexOutOfBoundsException ex) {
+            return sightings;
+        }
+
+    }
+
 }

@@ -13,7 +13,7 @@
     <div class="container">
         <div class="row m-4">
             <div class="col text-center border border-dark">
-                <h1>Hero Education and Relationship Organization (HERO)</h1>
+                <h1><a href="/">Hero Education and Relationship Organization (HERO)</a></h1>
             </div>
         </div>
 
@@ -38,9 +38,15 @@
         <div class="row m-4">
             <div class="col-12 text-center">
                 <h4>Welcome to the HERO sightings page!</h4><br>
+                
+            </div>
+
+            <div class="col-12">
                 <h5>This site displays detailed information about any superhero (and supervillain) from the very moment
-                    you report them.
-                    <br>Please click the <strong>Sightings</strong> tab to report your superhero sighting.
+                    you report them. <br>
+                    <br>Click <strong>Sightings</strong> to report your superhero sighting.
+                    <br>
+                    <br>Click the top of the page <strong>(HERO)</strong> to navigate back to this page.
                 </h5>
             </div>
 
@@ -49,6 +55,26 @@
         <div class="row m-4">
             <div class="col-12 text-center">
                 <h4>Top 10 Latest Sightings Reported:</h4>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr th:each="sighting: ${sightings}">
+                            <td><a href="#" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}"><img
+                                        th:src="'/locationImage/' + ${sighting.location.locationID}" alt="" width="250"
+                                        height="200" /></a></td>
+                            <td>
+                                <a href="#" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}">
+                                    <p
+                                        th:text="${sighting.heroVillain.name} + ' was spotted @ ' + ${sighting.location.name} + ' on ' + ${sighting.date}">
+                                    </p>
+                                </a>
+                            </td>
+                            <td><a href="#" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}"><img
+                                        th:src="'/heroVillainImage/' + ${sighting.heroVillain.heroVillainID}" alt=""
+                                        width="250" height="200" /></a></td>
+
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

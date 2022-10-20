@@ -41,6 +41,7 @@ public interface SuperheroSightingsServiceLayer {
     public Sighting addSighting(Sighting sighting);
     public void updateSighting(Sighting sighting);
     public void deleteSightingByID(int sightingID);
+    public List<Sighting> get10MostRecentSightings();
     
     public Location getLocationByID(int locationID);
     public List<Location> getAllLocations();
