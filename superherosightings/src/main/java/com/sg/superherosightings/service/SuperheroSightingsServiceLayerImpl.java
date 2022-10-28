@@ -142,15 +142,32 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
     public void deleteSightingByID(int sightingID) {
         sightingDao.deleteSightingByID(sightingID);
     }
+    
+    private void updateLocationImageIfNull(Location location) {
+        
+        if(location.getImage() == null) {
+            addLocation(location);
+        }
+        
+    }
 
     @Override
     public Location getLocationByID(int locationID) {
-        return locationDao.getLocationByID(locationID);
+        Location location = locationDao.getLocationByID(locationID);
+        updateLocationImageIfNull(location);
+        return location;
     }
 
     @Override
     public List<Location> getAllLocations() {
-        return locationDao.getAllLocations();
+
+        List<Location> locations = locationDao.getAllLocations();
+        
+        for(Location location : locations) {
+            updateLocationImageIfNull(location);
+        }
+        
+        return locations;
     }
 
     @Override
@@ -161,7 +178,7 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
 
     // retrieving location image from (Google) Static Maps API
     private byte[] getLocationImageFromGoogle(Location location) {
-        final String API_KEY = "";
+        final String API_KEY = "AIzaSyC61tVi9tskuL06cge8SUUdkxHnkswI0HI";
         InputStream image;
         URL url;
         //taking the coordinates from location and doing the API call to Google
@@ -181,7 +198,7 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
     public void updateLocation(Location location) {
         Location oldLocation = getLocationByID(location.getLocationID());
 
-        if (oldLocation.getLatitude() == location.getLatitude() && oldLocation.getLongitude() == location.getLongitude()) {
+        if (oldLocation.getLatitude().equals(location.getLatitude()) && oldLocation.getLongitude().equals(location.getLongitude())) {
             location.setImage(oldLocation.getImage());
         } else {
             location.setImage(getLocationImageFromGoogle(location));
