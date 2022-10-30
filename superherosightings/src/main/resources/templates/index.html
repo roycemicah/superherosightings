@@ -58,7 +58,7 @@
                 <table class="table table-striped">
                     <tbody>
                         <tr th:each="sighting: ${sightings}">
-                            <td><a href="#" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}"><img
+                            <td><a href="#" th:if="${sighting.location.image} != null" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}"><img
                                         th:src="'/locationImage/' + ${sighting.location.locationID}" alt="" width="250"
                                         height="200" /></a></td>
                             <td>
@@ -68,7 +68,7 @@
                                     </p>
                                 </a>
                             </td>
-                            <td><a href="#" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}"><img
+                            <td><a href="#" th:if="${sighting.heroVillain.image} != null" th:href="@{/sightingDetail(sightingID=${sighting.sightingID})}"><img
                                         th:src="'/heroVillainImage/' + ${sighting.heroVillain.heroVillainID}" alt=""
                                         width="250" height="200" /></a></td>
 

@@ -72,9 +72,9 @@
                         Display Member(s)</span><br />
                 </span>
             </div>
-            <div class="col-6 text-right"><strong>Location Image</strong></div>
+            <div class="col-6 text-right"><strong th:if="${location.image} != null">Location Image</strong></div>
             <div class="col-6 text-left mb-3">
-                <img th:src="'/locationImage/' + ${location.locationID}" width="470px" height="400px" />
+                <img th:src="'/locationImage/' + ${location.locationID}" th:if="${location.image} != null" width="470px" height="400px" />
             </div>
             <div class="col-6"></div>
             <div class="col-3">

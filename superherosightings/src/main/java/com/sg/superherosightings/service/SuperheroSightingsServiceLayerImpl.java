@@ -142,19 +142,10 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
     public void deleteSightingByID(int sightingID) {
         sightingDao.deleteSightingByID(sightingID);
     }
-    
-    private void updateLocationImageIfNull(Location location) {
-        
-        if(location.getImage() == null) {
-            addLocation(location);
-        }
-        
-    }
 
     @Override
     public Location getLocationByID(int locationID) {
         Location location = locationDao.getLocationByID(locationID);
-        updateLocationImageIfNull(location);
         return location;
     }
 
@@ -162,10 +153,6 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
     public List<Location> getAllLocations() {
 
         List<Location> locations = locationDao.getAllLocations();
-        
-        for(Location location : locations) {
-            updateLocationImageIfNull(location);
-        }
         
         return locations;
     }
@@ -198,7 +185,7 @@ public class SuperheroSightingsServiceLayerImpl implements SuperheroSightingsSer
     public void updateLocation(Location location) {
         Location oldLocation = getLocationByID(location.getLocationID());
 
-        if (oldLocation.getLatitude().equals(location.getLatitude()) && oldLocation.getLongitude().equals(location.getLongitude())) {
+        if ((oldLocation.getLatitude().equals(location.getLatitude()) && oldLocation.getLongitude().equals(location.getLongitude()) && oldLocation.getImage() != null)) {
             location.setImage(oldLocation.getImage());
         } else {
             location.setImage(getLocationImageFromGoogle(location));
